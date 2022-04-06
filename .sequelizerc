@@ -1,0 +1,6 @@
+module.exports = {
+	config: require("./src/config/config.json"),
+	"models-path": require("./src/models"),
+	// "seeders-path": require("./src/config/config.ts"),
+	"migrations-path": require("./src/migrations"),
+};

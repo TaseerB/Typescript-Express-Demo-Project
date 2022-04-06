@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import user from "./routes/user/users";
 import login from "./routes/user/login";
 import tasks from "./routes/tasks/tasks";
+import verify from "./routes/user/verify";
 import * as dotenv from "dotenv";
 import sequelize from "./config/db";
 
@@ -18,6 +19,7 @@ const port = process.env.PORT;
 user(app);
 login(app);
 tasks(app);
+verify(app);
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello World!");

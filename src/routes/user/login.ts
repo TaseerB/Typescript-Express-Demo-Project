@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, Request, Response } from "express";
 import User from "../../models/user";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
@@ -7,7 +7,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export = (app: Express) => {
-	app.route("/login").post(async (req, res) => {
+	app.route("/login").post(async (req: Request, res: Response) => {
 		const secret: Secret = process.env.SECRET || "test";
 		const { password, email } = req.body;
 

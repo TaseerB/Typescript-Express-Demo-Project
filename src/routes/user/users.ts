@@ -5,7 +5,7 @@ import { responseObject, statusMessage } from "../../config/setResponses";
 
 // console.log("The table for the User model was just (re)created!");
 
-const { createUser, getUsers } = helperFunctions;
+const { createUser, getUsers, sendEmail } = helperFunctions;
 
 export = (app: Express) => {
 	console.info("---- User ----");
@@ -18,12 +18,19 @@ export = (app: Express) => {
 		})
 		.post(async (req: Request, res: Response) => {
 			const userObj = req.body;
+			const { host } = req.headers;
 			console.info({ userObj });
-			const check = await createUser(userObj);
-			let response: responseObject = check ? 200 : 400;
 
-			res
-				.status(response)
-				.json(response === 200 ? check : statusMessage["someThingWentWrong"]);
+			// const check = await createUser(userObj);
+			// Send email to the user to check if the email is valid or not
+
+			const response = await sendEmail(userObj, host || "localhost");
+			// let response: responseObject = check ? 200 : 400;
+
+			res.send(response);
+
+			// res
+			// 	.status(response)
+			// 	.json(response === 200 ? check : statusMessage["someThingWentWrong"]);
 		});
 };

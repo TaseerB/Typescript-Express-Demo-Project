@@ -1,13 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db";
 
+interface User {}
+
 class User extends Model {
 	declare id: number;
-	declare role: string;
+	declare role: "admin" | "user";
 	declare firstName: string;
 	declare lastName: string;
 	declare email: string;
 	declare password: string;
+	declare state: "verified" | "un-verified";
 	// User: any;
 }
 
@@ -33,6 +36,9 @@ User.init(
 			unique: true,
 		},
 		password: {
+			type: DataTypes.STRING,
+		},
+		state: {
 			type: DataTypes.STRING,
 		},
 	},
