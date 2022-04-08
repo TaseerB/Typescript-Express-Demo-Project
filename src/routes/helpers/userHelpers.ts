@@ -1,13 +1,14 @@
 import User from "../../models/user";
 import bcrypt from "bcrypt";
 import sgMail from "@sendgrid/mail";
+import { UserInterface } from "../../models/interfaces";
 
 const checkRole = (role: String) => role === "admin" || role === "user";
 
 /**
  * Main Helper Functions to be used in routes
  */
-const sendEmail = async (userObj: User, host: string) => {
+const sendEmail = async (userObj: User | UserInterface, host: string) => {
 	const { firstName, lastName, email, role, password, state } = userObj;
 
 	// const token = crypto.randomBytes(16).toString("hex");
@@ -38,13 +39,14 @@ const sendEmail = async (userObj: User, host: string) => {
 	return text;
 };
 
-const createUser = async (userObj: User): Promise<Boolean | object> => {
+const createUser = async (userObj: User | UserInterface): Promise<object> => {
 	const salt = await bcrypt.genSalt(10);
 	const { firstName, lastName, email, role, password, state } = userObj;
+	let userpassword: string | null = null;
 
-	const userpassword = await bcrypt.hash(password, salt);
+	if (password) userpassword = await bcrypt.hash(password, salt);
 
-	if (!checkRole(role)) return false;
+	if (!checkRole(role)) return {};
 
 	// Create User In DB
 	const user = await User.create(

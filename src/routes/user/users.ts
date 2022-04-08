@@ -21,7 +21,7 @@ export = (app: Express) => {
 			const { host } = req.headers;
 			console.info({ userObj });
 
-			// const check = await createUser(userObj);
+			const check = await createUser(userObj);
 			// Send email to the user to check if the email is valid or not
 
 			const response = await sendEmail(userObj, host || "localhost");

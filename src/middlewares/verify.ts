@@ -9,6 +9,7 @@ export = () => {
 		try {
 			const { authorization } = req.headers;
 			const tokenFromHeaders = authorization || null;
+			const cookie = req?.headers?.cookie;
 
 			if (tokenFromHeaders) {
 				let token = tokenFromHeaders.split(" ")[1];
@@ -17,6 +18,11 @@ export = () => {
 				console.info({ decoded });
 				res.locals.user = decoded;
 
+				next();
+			} else if (cookie) {
+				console.info("Found Cookie");
+				console.info({ userId: req?.params });
+				res.locals.userId = req?.params;
 				next();
 			} else {
 				res

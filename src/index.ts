@@ -1,25 +1,29 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
+import * as dotenv from "dotenv";
+
+// Routes
 import user from "./routes/user/users";
 import login from "./routes/user/login";
 import tasks from "./routes/tasks/tasks";
 import verify from "./routes/user/verify";
-import * as dotenv from "dotenv";
-import sequelize from "./config/db";
+import googleAuth from "./routes/user/googleAuth";
+// import sequelize from "./config/db";
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
 
-// const { env } = process;
-// const PORT = process.env.PORT;
 const port = process.env.PORT;
 
+// Handling Routes
 user(app);
 login(app);
 tasks(app);
 verify(app);
+googleAuth(app);
+// passportUser;
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello World!");

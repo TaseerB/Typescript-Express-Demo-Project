@@ -6,11 +6,12 @@ export = (app: Express) => {
 	console.info("---- User ----");
 
 	app
-		.route("/tasks")
+		.route("/tasks/:userId")
 		.get(verify(), async (req: Request, res: Response) => {
-			const { user } = res.locals;
-			console.info({ user });
-			res.json({ message: "Tasks" });
+			const { userId } = res.locals;
+			console.info({ userId });
+			// res.json({ message: "Tasks" });
+			// res.redirect("/google");
 
 			// Get Tasks for Particular User
 		})

@@ -1,22 +1,21 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db";
-
-interface User {}
+import Tasks from "./task";
 
 class User extends Model {
-	declare id: number;
+	declare userId: number;
 	declare role: "admin" | "user";
 	declare firstName: string;
 	declare lastName: string;
 	declare email: string;
 	declare password: string;
 	declare state: "verified" | "un-verified";
-	// User: any;
+	declare authType: string;
 }
 
 User.init(
 	{
-		id: {
+		userId: {
 			type: DataTypes.INTEGER,
 			autoIncrement: true,
 			primaryKey: true,
@@ -41,12 +40,17 @@ User.init(
 		state: {
 			type: DataTypes.STRING,
 		},
+		authType: {
+			type: DataTypes.STRING,
+		},
 	},
 	{
 		sequelize, // We need to pass the connection instance
 		modelName: "User", // We need to choose the model name
 	}
 );
+
+User.hasOne(Tasks);
 
 // (async () => {
 // 	await sequelize.sync({ force: true });
