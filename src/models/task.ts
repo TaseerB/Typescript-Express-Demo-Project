@@ -3,7 +3,7 @@ import sequelize from "../config/db";
 import { Model, DataTypes } from "sequelize";
 import User from "./user";
 
-class Tasks extends Model {
+class Task extends Model {
 	declare taskId: number;
 	// declare userId: number;
 	declare taskName: string;
@@ -11,12 +11,22 @@ class Tasks extends Model {
 	declare attachment: string;
 }
 
-Tasks.init(
+Task.init(
 	{
-		taskName: DataTypes.STRING,
-		taskDetail: DataTypes.STRING,
-		attachment: DataTypes.STRING,
-		// userId: DataTypes.NUMBER,
+		taskId: {
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
+			primaryKey: true,
+		},
+		taskName: {
+			type: DataTypes.STRING,
+		},
+		taskDetail: {
+			type: DataTypes.STRING,
+		},
+		attachment: {
+			type: DataTypes.STRING,
+		},
 	},
 	{
 		sequelize,
@@ -24,9 +34,9 @@ Tasks.init(
 	}
 );
 
-Tasks.belongsTo(User, {
-	foreignKey: "userlId",
+Task.belongsTo(User, {
+	foreignKey: "userId",
 	as: "User",
 });
 
-export default Tasks;
+export default Task;

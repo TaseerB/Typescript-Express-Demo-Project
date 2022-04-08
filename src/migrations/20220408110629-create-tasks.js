@@ -8,11 +8,6 @@ module.exports = {
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			// userId: {
-			// 	allowNull: false,
-			// 	foreignKey: true,
-			// 	type: Sequelize.INTEGER,
-			// },
 			taskName: {
 				type: Sequelize.STRING,
 			},
@@ -33,6 +28,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable("Tasks");
+		// await queryInterface.dropTable("Tasks");
 	},
 };

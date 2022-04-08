@@ -3,8 +3,8 @@ import cookieSession from "cookie-session";
 import passport from "passport";
 import "../../config/passport";
 import { UserInterface } from "../../models/interfaces";
-import helperFunctions from "../helpers/userHelpers";
-const { createUser } = helperFunctions;
+import { createUser } from "../helpers/userHelpers";
+// const  = helperFunctions;
 
 export = (app: Express) => {
 	app.use(
@@ -31,7 +31,7 @@ export = (app: Express) => {
 		}),
 		async (req: Request, res: Response) => {
 			const user: any = req.user;
-			let userId: any = 1;
+			// let userId: any = 1;
 
 			const userObj: UserInterface = {
 				role: "user",
@@ -42,17 +42,17 @@ export = (app: Express) => {
 				state: "verified",
 			};
 
-			try {
-				const user = await createUser(userObj);
-				console.info({ user });
-				// if (user) userId = user?.dataValues?.id;
-			} catch (e) {
-				console.error({ e });
-				// if user already exists get user id here
-			}
+			// try {
+			const usercreated = await createUser(userObj);
+			console.info({ usercreated });
+			// if (user) userId = user?.dataValues?.id;
+			// } catch (e) {
+			// console.error({ e });
+			// if user already exists get user id here
+			// }
 
 			console.info({ check: req, check2: req?.headers?.cookie });
-			res.redirect(`/tasks/:${userId}`);
+			res.redirect(`/tasks?userId=${user?.userId}}`);
 		}
 	);
 };

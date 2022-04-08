@@ -20,7 +20,7 @@ export = (app: Express) => {
 			);
 			if (validPassword) {
 				const token: String = jwt.sign(
-					{ id: user.id, email: user.email, firstName: user.firstName },
+					{ userId: user.userId, email: user.email, firstName: user.firstName },
 					secret
 				);
 				res.status(200).json({ token });

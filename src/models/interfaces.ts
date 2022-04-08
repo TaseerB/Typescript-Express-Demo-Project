@@ -10,3 +10,10 @@ export interface UserInterface {
 	password: string | null;
 	state: "verified" | "un-verified";
 }
+
+export interface TaskInterface {
+	userId: Number;
+	taskName: string;
+	taskDetail: string | null;
+	attachment: string | null;
+}

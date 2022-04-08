@@ -15,10 +15,14 @@ module.exports = {
 			lastName: {
 				type: Sequelize.STRING,
 			},
-			lastName: {
+			password: {
 				type: Sequelize.STRING,
 			},
 			email: {
+				type: Sequelize.STRING,
+				unique: true,
+			},
+			state: {
 				type: Sequelize.STRING,
 				unique: true,
 			},
@@ -33,6 +37,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable("Users");
+		// await queryInterface.dropTable("Users");
 	},
 };

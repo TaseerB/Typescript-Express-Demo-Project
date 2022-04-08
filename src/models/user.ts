@@ -50,7 +50,7 @@ User.init(
 	}
 );
 
-User.hasOne(Tasks);
+// User.hasOne(Tasks);
 
 // (async () => {
 // 	await sequelize.sync({ force: true });

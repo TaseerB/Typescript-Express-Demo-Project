@@ -48,9 +48,9 @@ const createUser = async (userObj: User | UserInterface): Promise<object> => {
 
 	if (!checkRole(role)) return {};
 
-	// Create User In DB
-	const user = await User.create(
-		{
+	const [user, created] = await User.findOrCreate({
+		where: { email },
+		defaults: {
 			firstName,
 			lastName,
 			email,
@@ -58,14 +58,26 @@ const createUser = async (userObj: User | UserInterface): Promise<object> => {
 			password: userpassword,
 			state,
 		},
-		{ fields: ["firstName", "lastName", "email", "role", "password", "state"] }
-	);
+	});
 
-	console.info({ user, password });
+	// Create User In DB
+	// const user = await User.create(
+	// 	{
+	// 		firstName,
+	// 		lastName,
+	// 		email,
+	// 		role,
+	// 		password: userpassword,
+	// 		state,
+	// 	},
+	// 	{ fields: ["firstName", "lastName", "email", "role", "password", "state"] }
+	// );
 
-	return user;
+	// console.info({ user, password });
+
+	return { user, created };
 };
 
 const getUsers = async (): Promise<object> => await User.findAll();
 
-export default { getUsers, createUser, sendEmail };
+export { getUsers, createUser, sendEmail };
