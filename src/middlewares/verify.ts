@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
-import User from "../models/user";
-
-dotenv.config();
 
 export = () => {
 	return async (req: Request, res: Response, next: NextFunction) => {

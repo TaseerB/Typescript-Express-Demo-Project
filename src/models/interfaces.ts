@@ -17,3 +17,8 @@ export interface TaskInterface {
 	taskDetail: string | null;
 	attachment: string | null;
 }
+
+export interface taskByIdInterface {
+	taskId: number;
+	userId: number;
+}
