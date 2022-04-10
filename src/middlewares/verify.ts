@@ -4,9 +4,10 @@ import jwt from "jsonwebtoken";
 export = () => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
+			// console.info({ req });
 			const { authorization } = req.headers;
-			const tokenFromHeaders: string | null = authorization || null;
-			const cookie: any = req?.headers?.cookie;
+			const tokenFromHeaders: any = authorization || null;
+			// const cookie: any = req?.headers?.cookie;
 
 			if (tokenFromHeaders) {
 				// If user registered from his own personal email`
@@ -19,14 +20,21 @@ export = () => {
 
 				res.locals.userId = decoded?.userId;
 				next();
-			} else if (cookie) {
-				// User Logged in through Google or Facebook
+			}
+			// else if (cookie) {
+			// 	// User Logged in through Google or Facebook
 
-				console.info("Found Cookie");
-				console.info({ userId: req?.params });
-				res.locals.userId = req?.params;
-				next();
-			} else {
+			// 	let token: string = tokenFromHeaders.split(" ")[1];
+			// 	let decoded: any = jwt.verify(token, process.env.SECRET || "test");
+
+			// 	console.info({ decoded });
+
+			// 	console.info("Found Cookie");
+			// 	// console.info({ userId: req?.params });
+			// 	res.locals.userId = decoded?.userId;
+			// 	next();
+			// }
+			else {
 				res
 					.status(400)
 					.json({ message: "No Authorization token provided in request" });

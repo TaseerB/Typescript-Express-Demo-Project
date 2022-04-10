@@ -1,5 +1,5 @@
 import { Request, Response, Express } from "express";
-import { createUser, getUsers, sendEmail } from "../helpers/userHelpers";
+import { createUser, getUsers } from "../helpers/userHelpers";
 import { responseObject, statusMessage } from "../../config/setResponses";
 
 export = (app: Express) => {

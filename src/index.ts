@@ -1,6 +1,9 @@
+// Libraries
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import * as dotenv from "dotenv";
+import cookieSession from "cookie-session";
+import passport from "passport";
 
 // Routes
 import user from "./routes/user/users";
@@ -17,6 +20,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const port = process.env.PORT;
+const cookieKey: any = process?.env?.COOKIEKEY || "someSomeSome";
 
 // Handling Routes
 user(app);
@@ -25,7 +29,17 @@ tasks(app);
 verify(app);
 googleAuth(app);
 taskById(app);
-// passportUser;
+// passportUser
+
+app.use(
+	cookieSession({
+		maxAge: 30 * 24 * 60 * 60 * 1000,
+		keys: [cookieKey],
+	})
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello World!");

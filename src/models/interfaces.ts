@@ -9,6 +9,7 @@ export interface UserInterface {
 	email: string;
 	password: string | null;
 	state: "verified" | "un-verified";
+	authType: "system" | "google";
 }
 
 export interface TaskInterface {

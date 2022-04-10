@@ -4,6 +4,8 @@ import passport from "passport";
 import "../../config/passport";
 import { UserInterface } from "../../models/interfaces";
 import { createUser } from "../helpers/userHelpers";
+import jwt, { Secret } from "jsonwebtoken";
+
 // const  = helperFunctions;
 
 export = (app: Express) => {
@@ -31,28 +33,40 @@ export = (app: Express) => {
 		}),
 		async (req: Request, res: Response) => {
 			const user: any = req.user;
+			const userJsonObj = user._json;
+			let userId: any;
+			const secret: Secret = process.env.SECRET || "test";
+
+			console.info({ userJsonObj });
 			// let userId: any = 1;
 
 			const userObj: UserInterface = {
 				role: "user",
-				firstName: user?.name?.displayName,
-				lastName: user?.givenName?.familyName,
-				email: user?.email,
+				firstName: userJsonObj?.given_name,
+				lastName: userJsonObj?.familyName,
+				email: userJsonObj?.email,
 				password: null,
 				state: "verified",
+				authType: "google",
 			};
 
-			// try {
-			const usercreated = await createUser(userObj);
-			console.info({ usercreated });
-			// if (user) userId = user?.dataValues?.id;
-			// } catch (e) {
-			// console.error({ e });
-			// if user already exists get user id here
-			// }
+			const usercreated: any = await createUser(userObj);
 
-			console.info({ check: req, check2: req?.headers?.cookie });
-			res.redirect(`/tasks?userId=${user?.userId}}`);
+			console.info({ usercheck: usercreated?.user?.dataValues });
+			userId = usercreated?.user?.dataValues?.userId;
+
+			console.info({ check: userId });
+			const token: String = jwt.sign(
+				{
+					userId,
+					email: userObj.email,
+					firstName: userObj.firstName,
+				},
+				secret
+			);
+			res.status(200).json({
+				message: token,
+			});
 		}
 	);
 };
