@@ -27,6 +27,12 @@ Task.init(
 		attachment: {
 			type: DataTypes.STRING,
 		},
+		taskStatus: {
+			type: DataTypes.STRING,
+		},
+		completionTime: {
+			type: DataTypes.DATE,
+		},
 	},
 	{
 		sequelize,

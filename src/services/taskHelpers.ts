@@ -13,9 +13,17 @@ const getTasksFromDb = async (userId: any) =>
 const createTaskInDb = async (taskObj: TaskInterface): Promise<object> => {
 	console.info({ "creatingTask--->": taskObj });
 
-	const { taskName, taskDetail, attachment, userId } = taskObj;
+	const { taskName, taskDetail, attachment, userId, completionTime } = taskObj;
+	taskObj.taskStatus = "PENDING";
 
-	return Task.create({ taskName, taskDetail, attachment, userId });
+	return Task.create({
+		taskName,
+		taskDetail,
+		attachment,
+		userId,
+		taskStatus: taskObj.taskStatus,
+		completionTime,
+	});
 };
 
 // Task By Id Helper functions

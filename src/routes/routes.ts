@@ -1,7 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
 
-// User Controllers
+//----------------------//
+//---- Controllers ----//
+//---------------------//
+
+// User
 import {
 	getUsers,
 	createOrFindUser,
@@ -11,7 +15,7 @@ import {
 	verifyUser,
 } from "./controllers/users.controller";
 
-// Task Controllers
+// Tasks
 import {
 	getTasks,
 	createTask,
@@ -20,7 +24,12 @@ import {
 	deleteTaskById,
 } from "./controllers/tasks.controller";
 
-// Middlewares
+//Reports
+import { tasksStats } from "./controllers/reports.controller";
+
+// ------------------- //
+// --- Middlewares --- //
+// ------------------- //
 import { taskByIdInput } from "./middlewares/taskByIdInput";
 import { verify } from "./middlewares/verify";
 import "../db/config/passport";
@@ -31,6 +40,8 @@ import { somethingWentWrong } from "../services/common";
 let router: any;
 
 try {
+	const date = new Date();
+	console.info({ date });
 	console.info("---- Routes ----");
 
 	// Defining Router
@@ -76,6 +87,10 @@ try {
 		.get("/tasks/:taskId", taskMiddlewareFunctions, getTaskById)
 		.put("/tasks/:taskId", taskMiddlewareFunctions, editTaskById)
 		.delete("/tasks/:taskId", taskMiddlewareFunctions, deleteTaskById);
+
+	// Reports Routes
+
+	router.get("/reports", verify, tasksStats);
 } catch (e) {
 	console.error({ e });
 	router.get("/error/", somethingWentWrong);

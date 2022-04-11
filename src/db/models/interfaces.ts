@@ -13,10 +13,12 @@ export interface UserInterface {
 }
 
 export interface TaskInterface {
-	userId: Number;
+	userId: number;
 	taskName: string;
 	taskDetail: string | null;
 	attachment: string | null;
+	taskStatus: "COMPLETED" | "PENDING";
+	completionTime: Date;
 }
 
 export interface taskByIdInterface {

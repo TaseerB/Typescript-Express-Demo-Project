@@ -1,4 +1,4 @@
-import { Request, Response, Express } from "express";
+import { Request, Response } from "express";
 import { customRequest } from "../../db/models/requestModel";
 import {
 	getTasksFromDb,

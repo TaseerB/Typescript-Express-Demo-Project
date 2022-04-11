@@ -12,7 +12,7 @@ export const verify = async (
 		const userEmailFromGoole: any = userFromGoogle?.user?._json?.email;
 		const chechHeaders: any = req;
 
-		console.info({ headers: chechHeaders });
+		// console.info({ headers: chechHeaders });
 		const { authorization } = req.headers;
 		const tokenFromHeaders: any = authorization || null;
 
