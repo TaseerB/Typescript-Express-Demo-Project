@@ -1,31 +1,39 @@
-import { Request, Response, Express } from "express";
-import { createUser, getUsers } from "../helpers/userHelpers";
-import { responseObject, statusMessage } from "../../config/setResponses";
+// import { Request, Response, Express } from "express";
+// import { createUser, getUsers, deleteUserById } from "../helpers/userHelpers";
+// import { responseObject, statusMessage } from "../../config/setResponses";
+// import verify from "../middlewares/verify";
 
-export = (app: Express) => {
-	console.info("---- User ----");
+// export = (app: Express) => {
+// 	console.info("---- User ----");
 
-	app
-		.route("/users")
-		.get(async (req: Request, res: Response) => {
-			const response = await getUsers();
-			res.json(response);
-		})
-		.post(async (req: Request, res: Response) => {
-			const userObj = req.body;
-			const { host } = req.headers;
-			console.info({ userObj });
+// 	app
+// 		.route("/users")
+// 		.get(async (req: Request, res: Response) => {
+// 			const response = await getUsers();
+// 			res.json(response);
+// 		})
+// 		.post(async (req: Request, res: Response) => {
+// 			const userObj = req.body;
+// 			const { host } = req.headers;
+// 			console.info({ userObj });
 
-			const check = await createUser(userObj);
-			// Send email to the user to check if the email is valid or not
+// 			const check = await createUser(userObj);
+// 			// Send email to the user to check if the email is valid or not
 
-			// const response = await sendEmail(userObj, host || "localhost");
-			// let response: responseObject = check ? 200 : 400;
+// 			// const response = await sendEmail(userObj, host || "localhost");
+// 			// let response: responseObject = check ? 200 : 400;
 
-			res.json(check);
+// 			res.json(check);
 
-			// res
-			// 	.status(response)
-			// 	.json(response === 200 ? check : statusMessage["someThingWentWrong"]);
-		});
-};
+// 			// res
+// 			// 	.status(response)
+// 			// 	.json(response === 200 ? check : statusMessage["someThingWentWrong"]);
+// 		})
+// 		.delete(verify(), async (req: Request, res: Response) => {
+// 			const userObj = req.body;
+// 			console.info({ userObj });
+// 			const deletedUser = await deleteUserById(userObj);
+
+// 			res.status(200).json({ message: deletedUser });
+// 		});
+// };

@@ -7,10 +7,10 @@ import { taskByIdInterface } from "../../models/interfaces";
  */
 
 // Tasks Helper Functioms
-const getTasks = async (userId: any): Promise<object> =>
+const getTasksFromDb = async (userId: any) =>
 	Task.findAll({ where: { userId } });
 
-const createTask = async (taskObj: TaskInterface): Promise<object> => {
+const createTaskInDb = async (taskObj: TaskInterface): Promise<object> => {
 	console.info({ "creatingTask--->": taskObj });
 
 	const { taskName, taskDetail, attachment, userId } = taskObj;
@@ -19,7 +19,7 @@ const createTask = async (taskObj: TaskInterface): Promise<object> => {
 };
 
 // Task By Id Helper functions
-const getTaskById = async (inputObj: taskByIdInterface) => {
+const getSepecificTaskFromDb = async (inputObj: taskByIdInterface) => {
 	console.info({ getTaskById: inputObj });
 
 	const { userId, taskId } = inputObj;
@@ -27,7 +27,7 @@ const getTaskById = async (inputObj: taskByIdInterface) => {
 	return Task.findOne({ where: { userId, taskId } });
 };
 
-const updateTaskBydId = async (
+const updateTaskInDb = async (
 	taskUpdateInputObject: any,
 	inputObj: taskByIdInterface
 ) => {
@@ -49,7 +49,7 @@ const updateTaskBydId = async (
 	}
 };
 
-const deleteTaskById = async (inputObj: any) => {
+const deleteTaskFromDb = async (inputObj: any) => {
 	console.info({ deleteTaskById: inputObj });
 	const { userId, taskId } = inputObj;
 	return Task.destroy({
@@ -57,4 +57,10 @@ const deleteTaskById = async (inputObj: any) => {
 	});
 };
 
-export { createTask, getTasks, getTaskById, updateTaskBydId, deleteTaskById };
+export {
+	createTaskInDb,
+	getTasksFromDb,
+	getSepecificTaskFromDb,
+	updateTaskInDb,
+	deleteTaskFromDb,
+};

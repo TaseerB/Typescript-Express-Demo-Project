@@ -8,7 +8,14 @@ const checkRole = (role: String) => role === "admin" || role === "user";
  * Main Helper Functions to be used in routes
  */
 
-const createUser = async (userObj: User | UserInterface): Promise<object> => {
+const getUsersFromDb = async () => User.findAll();
+
+const getUserByEmail = async (useremail: string) =>
+	User.findOne({ where: { email: useremail } });
+
+const createUser = async (userObj: User | UserInterface) => {
+	console.info({ createUser: userObj });
+
 	const salt = await bcrypt.genSalt(10);
 	const { firstName, lastName, email, role, password, state } = userObj;
 	let userpassword: string | null = null;
@@ -48,6 +55,12 @@ const createUser = async (userObj: User | UserInterface): Promise<object> => {
 	return { user, created };
 };
 
-const getUsers = async (): Promise<object> => await User.findAll();
+const deleteUserById = async (inputObj: any) => {
+	console.info({ deleteUserById: inputObj });
+	const { userId } = inputObj;
+	return User.destroy({
+		where: { userId },
+	});
+};
 
-export { getUsers, createUser };
+export { getUsersFromDb, createUser, deleteUserById, getUserByEmail };
