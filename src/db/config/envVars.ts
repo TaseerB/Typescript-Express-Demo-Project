@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export default {
+export const envVariables = {
 	port: process?.env?.PORT || 3000,
 	host: process?.env?.host || "localhost",
 	clientID: process?.env?.CLIENTID || "test",

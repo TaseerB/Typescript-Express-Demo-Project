@@ -1,6 +1,6 @@
-import Task from "../../models/task";
-import { TaskInterface } from "../../models/interfaces";
-import { taskByIdInterface } from "../../models/interfaces";
+import Task from "../db/models/task";
+import { TaskInterface } from "../db/models/interfaces";
+import { taskByIdInterface } from "../db/models/interfaces";
 
 /**
  * Main Helper Functions

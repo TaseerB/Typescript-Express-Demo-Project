@@ -1,6 +1,6 @@
-import User from "../../models/user";
+import User from "../db/models/user";
 import bcrypt from "bcrypt";
-import { UserInterface } from "../../models/interfaces";
+import { UserInterface } from "../db/models/interfaces";
 
 const checkRole = (role: String) => role === "admin" || role === "user";
 

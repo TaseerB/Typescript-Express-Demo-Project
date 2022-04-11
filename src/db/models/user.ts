@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db";
-import Tasks from "./task";
 
 class User extends Model {
 	declare userId: number;
@@ -49,11 +48,5 @@ User.init(
 		modelName: "User", // We need to choose the model name
 	}
 );
-
-// User.hasOne(Tasks);
-
-// (async () => {
-// 	await sequelize.sync({ force: true });
-// })();
 
 export default User;

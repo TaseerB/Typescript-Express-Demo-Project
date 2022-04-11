@@ -8,6 +8,7 @@ import {
 	deleteUser,
 	loginUser,
 	googleAuthUser,
+	verifyUser,
 } from "./controllers/users.controller";
 
 // Task Controllers
@@ -22,51 +23,62 @@ import {
 // Middlewares
 import { taskByIdInput } from "./middlewares/taskByIdInput";
 import { verify } from "./middlewares/verify";
-import "../config/passport";
+import "../db/config/passport";
 
-console.info("---- Routes ----");
+// common functions
+import { somethingWentWrong } from "../services/common";
 
-// Defining Router
-const router = Router();
+let router: any;
 
-// Middleware Function Stack
-const taskMiddlewareFunctions = [verify, taskByIdInput];
+try {
+	console.info("---- Routes ----");
 
-//  ------- Setting Routes and calling necessary controllrers ------- //
+	// Defining Router
+	router = Router();
 
-// Users Routes
-console.info("---- Users routes ----");
-router
-	.get("/users", getUsers)
-	.post("/users", createOrFindUser)
-	.delete("/users", verify, deleteUser);
+	// Middleware Function Stack
+	const taskMiddlewareFunctions = [verify, taskByIdInput];
 
-// Auth Routes
-router.post("/login", loginUser);
+	//  ------- Setting Routes and calling necessary controllrers ------- //
 
-// Google Based Auth Routes
-router.get(
-	"/google",
-	passport.authenticate("google", {
-		scope: ["email", "profile"],
-	})
-);
-router.get(
-	"/google/callback",
-	passport.authenticate("google", {
-		failureRedirect: "/failed",
-	}),
-	googleAuthUser
-);
+	// Users Routes
+	console.info("---- Users routes ----");
+	router
+		.get("/users", getUsers)
+		.post("/users", createOrFindUser)
+		.delete("/users", verify, deleteUser);
 
-// Tasks Routes
-console.info("---- Tasks routes ----");
-router.get("/tasks", verify, getTasks).post("/tasks", verify, createTask);
+	// Auth Routes
+	router.post("/login", loginUser);
+	router.get("/verify/:email/:token", verifyUser);
 
-// Task by Id routes
-router
-	.get("/tasks/:taskId", taskMiddlewareFunctions, getTaskById)
-	.put("/tasks/:taskId", taskMiddlewareFunctions, editTaskById)
-	.delete("/tasks/:taskId", taskMiddlewareFunctions, deleteTaskById);
+	// Google Based Auth Routes
+	router.get(
+		"/google",
+		passport.authenticate("google", {
+			scope: ["email", "profile"],
+		})
+	);
+	router.get(
+		"/google/callback",
+		passport.authenticate("google", {
+			failureRedirect: "/failed",
+		}),
+		googleAuthUser
+	);
+
+	// Tasks Routes
+	console.info("---- Tasks routes ----");
+	router.get("/tasks", verify, getTasks).post("/tasks", verify, createTask);
+
+	// Task by Id routes
+	router
+		.get("/tasks/:taskId", taskMiddlewareFunctions, getTaskById)
+		.put("/tasks/:taskId", taskMiddlewareFunctions, editTaskById)
+		.delete("/tasks/:taskId", taskMiddlewareFunctions, deleteTaskById);
+} catch (e) {
+	console.error({ e });
+	router.get("/error/", somethingWentWrong);
+}
 
 export default router;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { taskByIdInterface } from "../../models/interfaces";
-import { customRequest } from "../../models/requestModel";
+import { taskByIdInterface } from "../../db/models/interfaces";
+import { customRequest } from "../../db/models/requestModel";
 
 export const taskByIdInput = (
 	req: customRequest,

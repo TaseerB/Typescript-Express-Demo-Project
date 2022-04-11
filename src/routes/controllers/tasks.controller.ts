@@ -1,12 +1,12 @@
 import { Request, Response, Express } from "express";
-import { customRequest } from "../../models/requestModel";
+import { customRequest } from "../../db/models/requestModel";
 import {
 	getTasksFromDb,
 	createTaskInDb,
 	getSepecificTaskFromDb,
 	updateTaskInDb,
 	deleteTaskFromDb,
-} from "../helpers/taskHelpers";
+} from "../../services/taskHelpers";
 
 export const getTasks = async (req: Request, res: Response) => {
 	console.info("tasks");

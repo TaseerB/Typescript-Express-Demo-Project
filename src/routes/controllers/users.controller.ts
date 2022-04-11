@@ -5,10 +5,10 @@ import {
 	createUser,
 	getUsersFromDb,
 	deleteUserById,
-} from "../helpers/userHelpers";
+} from "../../services/userHelpers";
 
-import User from "../../models/user";
-import { UserInterface } from "../../models/interfaces";
+import User from "../../db/models/user";
+import { UserInterface } from "../../db/models/interfaces";
 
 export const getUsers = async (req: Request, res: Response) => {
 	const response = await getUsersFromDb();
@@ -63,8 +63,8 @@ export const loginUser = async (req: Request, res: Response) => {
 };
 
 export const googleAuthUser = async (req: Request, res: Response) => {
-	const user: any = req.user;
-	const userJsonObj = user._json;
+	const user: any = req?.user;
+	const userJsonObj = user?._json;
 	let userId: any;
 	const secret: Secret = process.env.SECRET || "test";
 
@@ -75,7 +75,7 @@ export const googleAuthUser = async (req: Request, res: Response) => {
 		// userId: parseInt(userJsonObj?.sub, 10),
 		role: "user",
 		firstName: userJsonObj?.given_name,
-		lastName: userJsonObj?.familyName,
+		lastName: userJsonObj?.family_name,
 		email: userJsonObj?.email,
 		password: null,
 		state: "verified",
@@ -103,4 +103,36 @@ export const googleAuthUser = async (req: Request, res: Response) => {
 	console.info({ userFromGoogleAuth, getUserId });
 
 	res.redirect("/tasks");
+};
+
+export const verifyUser = async (req: Request, res: Response) => {
+	console.info("-- In verify --");
+	// const secret: Secret = process.env.SECRET || "test";
+	// const { password, email } = req.body;
+
+	const { token, email } = req.params;
+
+	const user = await User.findOne({
+		where: { email, state: "un-verified" },
+	});
+
+	if (user) {
+		console.info("-- User is unverified --");
+
+		if (token === "abc") {
+			await User.update(
+				{ state: "verified" },
+				{
+					where: {
+						email,
+					},
+				}
+			);
+		}
+
+		res.json({ message: "User Confirmed" });
+	} else {
+		// res.status(404).json({ error: "User Already Verified" });
+		res.redirect("/login");
+	}
 };
