@@ -28,7 +28,8 @@ Task.init(
 			type: DataTypes.STRING,
 		},
 		taskStatus: {
-			type: DataTypes.STRING,
+			type: DataTypes.ENUM,
+			values: ["COMPLETED", "PENDING"],
 		},
 		completionTime: {
 			type: DataTypes.DATE,
