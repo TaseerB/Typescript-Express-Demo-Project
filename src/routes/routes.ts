@@ -24,8 +24,14 @@ import {
 	deleteTaskById,
 } from "./controllers/tasks.controller";
 
-//Reports
-import { tasksStats } from "./controllers/reports.controller";
+// ----------------- //
+// --- Reports ---- //
+// ----------------//
+import {
+	tasksStats,
+	tasksCompletion,
+	tasksCompletedAfterDueTime,
+} from "./controllers/reports.controller";
 
 // ------------------- //
 // --- Middlewares --- //
@@ -90,7 +96,9 @@ try {
 
 	// Reports Routes
 
-	router.get("/reports", verify, tasksStats);
+	router.get("/tasks-activity-stats", verify, tasksStats);
+	router.get("/tasks-completion-stats", verify, tasksCompletion);
+	router.get("/tasks-completed-late-stats", verify, tasksCompletedAfterDueTime);
 } catch (e) {
 	console.error({ e });
 	router.get("/error/", somethingWentWrong);

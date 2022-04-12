@@ -10,6 +10,8 @@ const checkRole = (role: String) => role === "admin" || role === "user";
 
 const getUsersFromDb = async () => User.findAll();
 
+const getUserById = async (userId: number) => User.findByPk(userId);
+
 const getUserByEmail = async (useremail: string) =>
 	User.findOne({ where: { email: useremail } });
 
@@ -63,4 +65,10 @@ const deleteUserById = async (inputObj: any) => {
 	});
 };
 
-export { getUsersFromDb, createUser, deleteUserById, getUserByEmail };
+export {
+	getUsersFromDb,
+	createUser,
+	deleteUserById,
+	getUserByEmail,
+	getUserById,
+};

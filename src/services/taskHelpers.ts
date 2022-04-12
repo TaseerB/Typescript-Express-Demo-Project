@@ -1,13 +1,13 @@
 import Task from "../db/models/task";
 import { TaskInterface } from "../db/models/interfaces";
 import { taskByIdInterface } from "../db/models/interfaces";
-
+import { Op, col } from "sequelize";
 /**
  * Main Helper Functions
  */
 
 // Tasks Helper Functioms
-const getTasksFromDb = async (userId: any) =>
+const getTasksFromDb = async (userId: number) =>
 	Task.findAll({ where: { userId } });
 
 const createTaskInDb = async (taskObj: TaskInterface): Promise<object> => {
@@ -47,7 +47,7 @@ const updateTaskInDb = async (
 		if (value) updateobject[key] = value;
 	});
 
-	console.info({ updateobject });
+	// updateobject.updatedAt = "2022-04-17T00:00:00.000Z";
 
 	if (Object.entries(updateobject).length > 0) {
 		console.info({ updateobject });
@@ -65,10 +65,22 @@ const deleteTaskFromDb = async (inputObj: any) => {
 	});
 };
 
+const getDelayedTasks = async (userId: number) => {
+	return Task.findAll({
+		where: {
+			userId,
+			updatedAt: {
+				[Op.gte]: col("completionTime"),
+			},
+		},
+	});
+};
+
 export {
 	createTaskInDb,
 	getTasksFromDb,
 	getSepecificTaskFromDb,
 	updateTaskInDb,
 	deleteTaskFromDb,
+	getDelayedTasks,
 };

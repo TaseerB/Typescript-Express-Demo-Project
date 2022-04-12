@@ -25,3 +25,9 @@ export interface taskByIdInterface {
 	taskId: number;
 	userId: number;
 }
+
+export interface TasksActivityCountInterface {
+	totalTasksCount: number;
+	pendingTasksCount: number;
+	completedTasksCount: number;
+}

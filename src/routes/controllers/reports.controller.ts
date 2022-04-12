@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
-import { getTasksStats } from "../../services/reports.service";
-
+import {
+	getTasksStats,
+	formatTasksStats,
+} from "../../services/reports.service";
+import { TasksActivityCountInterface } from "../../db/models/interfaces";
 export const tasksStats = async (req: Request, res: Response) => {
 	const { userId } = res.locals;
 	console.info({ "GetStatsfor--->": userId });
@@ -19,17 +22,53 @@ export const tasksStats = async (req: Request, res: Response) => {
 	console.info({ result });
 
 	const [completedTasksCount, pendingTasksCount] = result;
-
-	// const getPendingTasksCount = await getTasksStats(inpuObject);
-
 	const totalTasksCount = pendingTasksCount + completedTasksCount;
 
+	const tasksCountObject: TasksActivityCountInterface = {
+		totalTasksCount,
+		pendingTasksCount,
+		completedTasksCount,
+	};
+
 	res.status(200).json({
-		tasksCount: {
-			totalTasksCount,
-			completedTasksCount,
-			pendingTasksCount,
-		},
+		tasksCount: tasksCountObject,
 	});
 	return;
+};
+
+export const tasksCompletion = async (req: Request, res: Response) => {
+	const { userId } = res.locals;
+
+	console.info({ "GetStatsfor--->": userId });
+
+	const inputObject: any = {
+		userId,
+		taskStatus: "COMPLETED",
+		dueFlag: false,
+	};
+
+	const countOfTasksPerDay = await formatTasksStats(inputObject);
+
+	// console.info({ getUser: userCreationTime });
+
+	res.status(200).json({ countOfTasksPerDay });
+};
+
+export const tasksCompletedAfterDueTime = async (
+	req: Request,
+	res: Response
+) => {
+	const { userId } = res.locals;
+
+	console.info({ "GetStatsforTasksDelayedCompletion--->": userId });
+
+	const inputObject: any = {
+		userId,
+		taskStatus: "COMPLETED",
+		dueFlag: true,
+	};
+
+	const tasksAfterDueTime = await formatTasksStats(inputObject);
+
+	res.status(200).json({ tasksAfterDueTime });
 };

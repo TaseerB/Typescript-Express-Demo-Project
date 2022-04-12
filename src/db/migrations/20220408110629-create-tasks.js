@@ -18,7 +18,8 @@ module.exports = {
 				type: Sequelize.STRING,
 			},
 			taskStatus: {
-				type: Sequelize.STRING,
+				type: Sequelize.ENUM,
+				values: ["COMPLETED", "PENDING"],
 			},
 			completionTime: {
 				allowNull: false,
@@ -30,6 +31,9 @@ module.exports = {
 			},
 			updatedAt: {
 				allowNull: false,
+				defaultValue: Sequelize.literal(
+					"CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+				),
 				type: Sequelize.DATE,
 			},
 		});
