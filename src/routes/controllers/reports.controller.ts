@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import {
 	getTasksStats,
-	formatTasksStats,
+	getFormatTasksStats,
 } from "../../services/reports.service";
 import { TasksActivityCountInterface } from "../../db/models/interfaces";
+
+// Main Controllers
 export const tasksStats = async (req: Request, res: Response) => {
 	const { userId } = res.locals;
 	console.info({ "GetStatsfor--->": userId });
@@ -47,7 +49,7 @@ export const tasksCompletion = async (req: Request, res: Response) => {
 		dueFlag: false,
 	};
 
-	const countOfTasksPerDay = await formatTasksStats(inputObject);
+	const countOfTasksPerDay = await getFormatTasksStats(inputObject);
 
 	// console.info({ getUser: userCreationTime });
 
@@ -68,7 +70,38 @@ export const tasksCompletedAfterDueTime = async (
 		dueFlag: true,
 	};
 
-	const tasksAfterDueTime = await formatTasksStats(inputObject);
+	const tasksAfterDueTime = await getFormatTasksStats(inputObject);
 
 	res.status(200).json({ tasksAfterDueTime });
+};
+
+export const tasksCompletionSingleDay = async (req: Request, res: Response) => {
+	const { userId } = res.locals;
+	console.info({ "GetStatsforSingleDayMostCompletion--->": userId });
+
+	const inputObject: any = {
+		userId,
+		taskStatus: "COMPLETED",
+		dueFlag: false,
+	};
+
+	const countOfTasksPerDay = await getFormatTasksStats(inputObject);
+	let max = 0;
+
+	const countOfSingleDay = countOfTasksPerDay.filter((t: any) => {
+		console.info({ max, tcount: t.tasksCount });
+		if (t.tasksCount > max) {
+			max = t.tasksCount;
+			return t;
+		}
+	});
+
+	countOfTasksPerDay;
+
+	res.status(200).json({
+		mostInSingleDay: {
+			day: countOfSingleDay[0].day,
+			tasksCompleted: countOfSingleDay[0].tasksCount,
+		},
+	});
 };

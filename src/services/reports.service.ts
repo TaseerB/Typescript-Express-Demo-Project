@@ -1,7 +1,11 @@
 import Task from "../db/models/task";
 import { TaskInterface } from "../db/models/interfaces";
 import { taskByIdInterface } from "../db/models/interfaces";
-import { getTasksFromDb, getDelayedTasks } from "./taskHelpers";
+import {
+	getTasksFromDb,
+	getDelayedTasks,
+	getCompletedTasks,
+} from "./taskHelpers";
 import { days, daysArray } from "../db/models/constants";
 
 const getTasksStats = async (inputObj: any) => {
@@ -20,40 +24,29 @@ const getTasksStats = async (inputObj: any) => {
 	return count;
 };
 
-const formatTasksStats = async (inputObject: any) => {
+const getFormatTasksStats = async (inputObject: any) => {
 	const { userId, taskStatus, dueFlag } = inputObject;
 	const tasksCompleted: any = [];
 	let tasks: any;
 
 	if (dueFlag) {
-		tasks = await getDelayedTasks(userId);
+		tasks = await getDelayedTasks({ userId, taskStatus });
 	} else {
-		tasks = await getTasksFromDb(userId);
+		tasks = await getCompletedTasks({ userId, taskStatus });
 	}
 
 	console.info({ tasks });
 
 	tasks.forEach((task: any) => {
-		// console.info({ task });
-		if (task?.dataValues?.taskStatus === taskStatus) {
-			const getCompletionDay = new Date(task?.dataValues?.updatedAt).getDay();
+		const getCompletionDay = new Date(task?.dataValues?.updatedAt).getDay();
 
-			// console.info({ getCompletionDay, days });
-			const getDay = days[getCompletionDay];
+		const getDay = days[getCompletionDay];
 
-			console.info({ getDay });
-
-			if (dueFlag) {
-				// Set Tasks which have update date after completion date
-			}
-
-			tasksCompleted.push({
-				day: getDay,
-				taskName: task?.dataValues?.taskName,
-				completionTime: task?.dataValues?.updatedAt,
-			});
-		}
-		// userCreationTime
+		tasksCompleted.push({
+			day: getDay,
+			taskName: task?.dataValues?.taskName,
+			completionTime: task?.dataValues?.updatedAt,
+		});
 	});
 
 	let countoftasksperday: any = [];
@@ -71,4 +64,6 @@ const formatTasksStats = async (inputObject: any) => {
 	return countoftasksperday;
 };
 
-export { getTasksStats, formatTasksStats };
+// const getPerDayTasksStats;
+
+export { getTasksStats, getFormatTasksStats };

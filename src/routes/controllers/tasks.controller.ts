@@ -96,3 +96,9 @@ export const deleteTaskById = async (req: customRequest, res: Response) => {
 	res.status(400).json({ message: "No Task Found to Delete" });
 	return;
 };
+
+export const fileAttachment = (req: Request, res: Response) => {
+	console.info("route hit");
+	// console.info({ req });
+	res.status(200).json({ message: req?.file });
+};

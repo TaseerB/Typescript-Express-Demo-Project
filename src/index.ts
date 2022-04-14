@@ -7,6 +7,7 @@ import passport from "passport";
 
 // Routes
 import routes from "./routes/routes";
+// import fileRoutes from "./routes/routes.fileupload";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(passport.session());
 
 // Calling Routes
 app.use(routes);
+// app.use(fileRoutes);
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello World!");
@@ -35,4 +37,9 @@ app.get("/", (req: Request, res: Response) => {
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`);
+});
+
+app.get("/logout", (req: Request, res: Response) => {
+	// cron.stop();
+	res.send(200).json({ message: "logouted" });
 });
