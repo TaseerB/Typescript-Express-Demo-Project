@@ -23,8 +23,8 @@ module.exports = {
 				unique: true,
 			},
 			state: {
-				type: Sequelize.STRING,
-				unique: true,
+				type: Sequelize.ENUM,
+				values: ["VERIFIED", "UN-VERIFIED"],
 			},
 			createdAt: {
 				allowNull: false,
@@ -37,6 +37,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) {
-		// await queryInterface.dropTable("Users");
+		await queryInterface.dropTable("Users");
 	},
 };

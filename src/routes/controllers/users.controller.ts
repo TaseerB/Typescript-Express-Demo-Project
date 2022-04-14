@@ -1,14 +1,20 @@
 import jwt, { Secret } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+
+// Service Functions
 import {
 	createUser,
 	getUsersFromDb,
 	deleteUserById,
 } from "../../services/userHelpers";
 
+// Models
 import User from "../../db/models/user";
 import { UserInterface } from "../../db/models/interfaces";
+
+// Common Functions
+import { sendMail } from "../../services/common";
 
 export const getUsers = async (req: Request, res: Response) => {
 	const response = await getUsersFromDb();
@@ -20,13 +26,31 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 	const { host } = req.headers;
 	console.info({ userObj });
 
-	const check = await createUser(userObj);
+	const user: any = await createUser(userObj);
 	// Send email to the user to check if the email is valid or not
 
-	// const response = await sendEmail(userObj, host || "localhost");
+	// var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+	// token.save(function (err) {
+
+	const text =
+		"Hello " +
+		userObj.name +
+		",\n\n" +
+		"Please verify your account by clicking the link: \nhttp://" +
+		req.headers.host +
+		"/verify/" +
+		userObj.email +
+		"/" +
+		user?.user?.userId +
+		"\n\nThank You!\n";
+
+	const check = sendMail({
+		email: userObj.email,
+		text,
+	});
 	// let response: responseObject = check ? 200 : 400;
 
-	res.json(check);
+	res.status(200).json({ user });
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
@@ -110,25 +134,23 @@ export const verifyUser = async (req: Request, res: Response) => {
 	// const secret: Secret = process.env.SECRET || "test";
 	// const { password, email } = req.body;
 
-	const { token, email } = req.params;
+	const { userId, email } = req.params;
 
 	const user = await User.findOne({
-		where: { email, state: "un-verified" },
+		where: { email, userId, state: "UN-VERIFIED" },
 	});
 
 	if (user) {
 		console.info("-- User is unverified --");
 
-		if (token === "abc") {
-			await User.update(
-				{ state: "verified" },
-				{
-					where: {
-						email,
-					},
-				}
-			);
-		}
+		await User.update(
+			{ state: "VERIFIED" },
+			{
+				where: {
+					email,
+				},
+			}
+		);
 
 		res.json({ message: "User Confirmed" });
 	} else {

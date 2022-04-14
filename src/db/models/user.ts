@@ -8,7 +8,7 @@ class User extends Model {
 	declare lastName: string;
 	declare email: string;
 	declare password: string;
-	declare state: "verified" | "un-verified";
+	declare state: string;
 	declare authType: string;
 }
 
@@ -38,6 +38,7 @@ User.init(
 		},
 		state: {
 			type: DataTypes.STRING,
+			values: ["VERIFIED", "UN-VERIFIED"],
 		},
 		authType: {
 			type: DataTypes.STRING,

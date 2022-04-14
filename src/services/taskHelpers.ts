@@ -6,6 +6,14 @@ import { Op, col } from "sequelize";
  * Main Helper Functions
  */
 
+// File Upload
+
+// const uploadFile = () => {
+// 	console.info("here");
+
+// 	// const upload = multer({ dest: "uploads/" });
+// };
+
 // Tasks Helper Functioms
 const getTasksFromDb = async (userId: number) =>
 	Task.findAll({ where: { userId } });
@@ -65,15 +73,28 @@ const deleteTaskFromDb = async (inputObj: any) => {
 	});
 };
 
-const getDelayedTasks = async (userId: number) => {
+const getDelayedTasks = async (inputObj: any) => {
+	console.info({ getDelayedTasks: inputObj });
+
+	const { userId, taskStatus } = inputObj;
+
 	return Task.findAll({
 		where: {
 			userId,
+			taskStatus,
 			updatedAt: {
 				[Op.gte]: col("completionTime"),
 			},
 		},
 	});
+};
+
+const getCompletedTasks = async (inputObj: any) => {
+	console.info({ getCompletedTasks: inputObj });
+
+	const { userId, taskStatus } = inputObj;
+
+	return Task.findAll({ where: { userId, taskStatus } });
 };
 
 export {
@@ -83,4 +104,6 @@ export {
 	updateTaskInDb,
 	deleteTaskFromDb,
 	getDelayedTasks,
+	getCompletedTasks,
+	// uploadFile,
 };
