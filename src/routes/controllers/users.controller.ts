@@ -126,7 +126,7 @@ export const googleAuthUser = async (req: Request, res: Response) => {
 
 	console.info({ userFromGoogleAuth, getUserId });
 
-	res.redirect("/tasks");
+	res.status(200).json({ token });
 };
 
 export const verifyUser = async (req: Request, res: Response) => {

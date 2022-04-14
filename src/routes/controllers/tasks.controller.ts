@@ -6,7 +6,7 @@ import {
 	getSepecificTaskFromDb,
 	updateTaskInDb,
 	deleteTaskFromDb,
-} from "../../services/taskHelpers";
+} from "../../services/tasks.service";
 
 export const getTasks = async (req: Request, res: Response) => {
 	console.info("tasks");

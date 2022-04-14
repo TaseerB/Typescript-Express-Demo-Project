@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
 	getTasksStats,
 	getFormatTasksStats,
+	getSimilarTasks,
 } from "../../services/reports.service";
 import { TasksActivityCountInterface } from "../../db/models/interfaces";
 
@@ -104,4 +105,13 @@ export const tasksCompletionSingleDay = async (req: Request, res: Response) => {
 			tasksCompleted: countOfSingleDay[0].tasksCount,
 		},
 	});
+};
+
+export const sameTasks = async (req: Request, res: Response) => {
+	const { userId } = res.locals;
+	console.info({ "GetStatsforSingleDayMostCompletion--->": userId });
+
+	const retrieveSimilarTasks = await getSimilarTasks(userId);
+
+	res.status(200).json({ retrieveSimilarTasks });
 };

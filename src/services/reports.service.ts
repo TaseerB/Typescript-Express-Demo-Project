@@ -1,11 +1,11 @@
 import Task from "../db/models/task";
-import { TaskInterface } from "../db/models/interfaces";
-import { taskByIdInterface } from "../db/models/interfaces";
+// import { TaskInterface } from "../db/models/interfaces";
+// import { taskByIdInterface } from "../db/models/interfaces";
 import {
-	getTasksFromDb,
 	getDelayedTasks,
 	getCompletedTasks,
-} from "./taskHelpers";
+	getTasksFromDb,
+} from "./tasks.service";
 import { days, daysArray } from "../db/models/constants";
 
 const getTasksStats = async (inputObj: any) => {
@@ -64,6 +64,62 @@ const getFormatTasksStats = async (inputObject: any) => {
 	return countoftasksperday;
 };
 
+const getSimilarTasks = async (userId: number) => {
+	const tasks: any = await getTasksFromDb(userId);
+
+	const taskDetailsArray = tasks.map(
+		(task: any) => task?.taskName + " " + task?.taskDetail
+	);
+	// // .map((task) => task.taskName);
+	const similartTasks = tasks.filter((value: any, index: any) => {
+		const check = taskDetailsArray.indexOf(value);
+		// console.info({ value, index, check });
+
+		const similarityValueCheck = value?.taskName + " " + value?.taskDetail;
+
+		return taskDetailsArray.indexOf(similarityValueCheck) != index;
+	});
+
+	let similarTasks: any[] = [];
+	let arr_size = tasks.length;
+
+	for (let i = 0; i < arr_size / 2; i++) {
+		let count = 0;
+		const itask = tasks[i];
+		const isimilarityValueCheck = itask?.taskName + " " + itask?.taskDetail;
+
+		for (let j = i + 1; j < arr_size; j++) {
+			const jtask = tasks[j];
+			const jsimilarityValueCheck = jtask?.taskName + " " + jtask?.taskDetail;
+
+			if (isimilarityValueCheck === jsimilarityValueCheck) {
+				if (count === 0) {
+					similarTasks.push(jtask);
+					similarTasks.push(jtask);
+				} else {
+					similarTasks.push(jtask);
+				}
+				count++;
+			}
+		}
+	}
+
+	// tasks.forEach((task: any, index: any) => {
+	// 	const similarityValueCheck = task?.taskName + " " + task?.taskDetail;
+	// 	if (taskDetailsArray.indexOf(similarityValueCheck) != index) {
+	// 		similarTasks.push(task);
+	// 	}
+	// });
+
+	console.info({ similarTasks });
+
+	return similarTasks;
+
+	// tasks.forEach((task) => {
+	// 	console.info({ words: task?.taskDetail });
+	// });
+};
+
 // const getPerDayTasksStats;
 
-export { getTasksStats, getFormatTasksStats };
+export { getTasksStats, getFormatTasksStats, getSimilarTasks };
