@@ -20,17 +20,17 @@ export const tasksStats = async (req: Request, res: Response) => {
 	inpuObject.taskStatus = "PENDING";
 	promises.push(getTasksStats(inpuObject));
 
-	const result = await Promise.all(promises);
+	const result: any = await Promise.all(promises);
 
-	console.info({ result });
+	console.info({ result: result });
 
 	const [completedTasksCount, pendingTasksCount] = result;
-	const totalTasksCount = pendingTasksCount + completedTasksCount;
+	const totalTasksCount = pendingTasksCount.count + completedTasksCount.count;
 
 	const tasksCountObject: TasksActivityCountInterface = {
 		totalTasksCount,
-		pendingTasksCount,
-		completedTasksCount,
+		pendingTasksCount: pendingTasksCount.count,
+		completedTasksCount: completedTasksCount.count,
 	};
 
 	res.status(200).json({
@@ -77,7 +77,7 @@ export const tasksCompletedAfterDueTime = async (
 };
 
 export const tasksCompletionSingleDay = async (req: Request, res: Response) => {
-	const { userId } = res.locals;
+	const { userId } = res?.locals;
 	console.info({ "GetStatsforSingleDayMostCompletion--->": userId });
 
 	const inputObject: any = {
@@ -87,22 +87,26 @@ export const tasksCompletionSingleDay = async (req: Request, res: Response) => {
 	};
 
 	const countOfTasksPerDay = await getFormatTasksStats(inputObject);
-	let max = 0;
+	console.info({ countOfTasksPerDay });
 
-	const countOfSingleDay = countOfTasksPerDay.filter((t: any) => {
-		console.info({ max, tcount: t.tasksCount });
-		if (t.tasksCount > max) {
-			max = t.tasksCount;
-			return t;
-		}
-	});
+	let countOfSingleDay;
+	if (countOfTasksPerDay.length > 0) {
+		const max = Math.max(
+			...countOfTasksPerDay.map((value: any) => value?.tasksCount)
+		);
 
-	countOfTasksPerDay;
+		const findMax = countOfTasksPerDay
+			.map((value: any) => value?.tasksCount)
+			.indexOf(max);
+
+		console.info({ findMax, max });
+		countOfSingleDay = countOfTasksPerDay[findMax];
+	}
 
 	res.status(200).json({
 		mostInSingleDay: {
-			day: countOfSingleDay[0].day,
-			tasksCompleted: countOfSingleDay[0].tasksCount,
+			day: countOfSingleDay?.day,
+			tasksCompleted: countOfSingleDay?.tasksCount,
 		},
 	});
 };

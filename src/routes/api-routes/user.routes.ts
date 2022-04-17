@@ -1,6 +1,6 @@
 import passport from "passport";
 
-import { somethingWentWrong } from "../../services/common";
+import { somethingWentWrong } from "../../services/common.service";
 
 // User Controllers
 import {
@@ -10,6 +10,7 @@ import {
 	loginUser,
 	googleAuthUser,
 	verifyUser,
+	resetPassword,
 } from "../controllers/users.controller";
 
 // MiddleWares
@@ -43,6 +44,8 @@ export = (router: any) => {
 			}),
 			googleAuthUser
 		);
+
+		router.post("/password-reset", resetPassword);
 	} catch (e) {
 		console.error({ e });
 		router.redirect("/error", somethingWentWrong);
