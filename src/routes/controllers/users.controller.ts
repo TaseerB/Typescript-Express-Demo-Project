@@ -7,6 +7,9 @@ import {
 	createUser,
 	getUsersFromDb,
 	deleteUserById,
+	getUserByEmail,
+	updateUser,
+	updatePasswordInDb,
 } from "../../services/user.service";
 
 // Models
@@ -44,7 +47,7 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 		user?.user?.userId +
 		"\n\nThank You!\n";
 
-	const check = sendMail({
+	const check = await sendMail({
 		email: userObj.email,
 		text,
 	});
@@ -65,7 +68,7 @@ export const loginUser = async (req: Request, res: Response) => {
 	const secret: Secret = process.env.SECRET || "test";
 	const { password, email } = req.body;
 
-	const user = await User.findOne({ where: { email: email } });
+	const user = await getUserByEmail(email);
 
 	if (user) {
 		const validPassword: Boolean = await bcrypt.compare(
@@ -143,14 +146,16 @@ export const verifyUser = async (req: Request, res: Response) => {
 	if (user) {
 		console.info("-- User is unverified --");
 
-		await User.update(
-			{ state: "VERIFIED" },
-			{
-				where: {
-					email,
-				},
-			}
-		);
+		await updateUser(req.params, { state: "VERIFIED" });
+
+		// await User.update(
+		// 	,
+		// 	{
+		// 		where: {
+		// 			email,
+		// 		},
+		// 	}
+		// );
 
 		res.json({ message: "User Confirmed" });
 	} else {
@@ -159,4 +164,66 @@ export const verifyUser = async (req: Request, res: Response) => {
 	}
 };
 
-export const resetPassword = async (req: Request, res: Response) => {};
+export const resetPassword = async (req: Request, res: Response) => {
+	const { email } = req.body;
+
+	const user = await getUserByEmail(email);
+
+	if (user) {
+		const userId = user?.userId;
+		const html = `
+			<!DOCTYPE html>
+			<html>
+			<body>
+		
+			<h1>Click on the link to reset your password</h1>
+			<p>http://${req.headers.host}/password-update/${userId}/${email}<p>
+			
+			</body>
+			</html>
+			
+		`;
+
+		const check = await sendMail({ email, html });
+
+		console.info({ check });
+
+		res.status(200).json({
+			message: "reset email sent sucessfully",
+		});
+		return;
+	}
+
+	res.status(400).json({ message: "user Not Fuund" });
+	return;
+};
+
+export const updatePassword = async (req: Request, res: Response) => {
+	console.info("-- In password update --");
+	// const secret: Secret = process.env.SECRET || "test";
+	// const { password, email } = req.body;
+
+	const { userId, email } = req.params;
+	const { password } = req.body;
+
+	console.info({ userId, email });
+
+	const user = await User.findOne({
+		where: { userId, email, state: "VERIFIED" },
+	});
+
+	console.info({ user });
+
+	if (user) {
+		console.info("-- User is verified --");
+
+		await updatePasswordInDb({ userId, email, password });
+
+		res.status(200).json({ message: "Password Updated" });
+	} else {
+		res.status(404).json({ error: "User Something went wrong" });
+		// res.redirect("/login");
+	}
+};
+
+// export const updatePassword = async (req: Request, res: Response) => {};

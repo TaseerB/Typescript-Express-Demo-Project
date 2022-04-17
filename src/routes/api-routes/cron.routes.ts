@@ -39,7 +39,7 @@ import { sendMail } from "../../services/common.service";
 
 // export = (cron: any) => {
 try {
-	cron.schedule("*/20 * * * * *", async () => {
+	cron.schedule("*30 * * * *", async () => {
 		console.info("--- Email Cron for Pending Tasks ----");
 		const getStats: any = await getTasksStats({ taskStatus: "PENDING" });
 		// let task;

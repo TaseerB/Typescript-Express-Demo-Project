@@ -11,6 +11,7 @@ import {
 	googleAuthUser,
 	verifyUser,
 	resetPassword,
+	updatePassword,
 } from "../controllers/users.controller";
 
 // MiddleWares
@@ -45,7 +46,10 @@ export = (router: any) => {
 			googleAuthUser
 		);
 
+		// Password reset flow
 		router.post("/password-reset", resetPassword);
+		router.post("/password-update/:userId/:email", updatePassword);
+		// router.post("/update-password", verify);
 	} catch (e) {
 		console.error({ e });
 		router.redirect("/error", somethingWentWrong);
