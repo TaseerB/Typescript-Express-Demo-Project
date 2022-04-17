@@ -11,9 +11,7 @@ export const somethingWentWrong = (req: Request, res: Response) => {
 
 export const sendMail = async (inputObj: any) => {
 	console.info({ inputObj });
-	const { email, text } = inputObj;
-
-	let testaccount = await nodemailer.createTestAccount();
+	const { email, text, html } = inputObj;
 
 	let mailTransporter = nodemailer.createTransport({
 		service: "gmail",
@@ -29,7 +27,7 @@ export const sendMail = async (inputObj: any) => {
 		to: email,
 		subject: "Here is a link to verify your account!",
 		text,
-		html: ``,
+		html,
 		// html,
 		// 'Hello '+ name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + host + '\/confirmation\/' + email + '\/' + token + '\n\nThank You!\n',
 	};
