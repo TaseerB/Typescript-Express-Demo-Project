@@ -1,14 +1,13 @@
 // Libraries
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
-import * as dotenv from "dotenv";
 import cookieSession from "cookie-session";
 import passport from "passport";
 
 // Routes
 import routes from "./routes/routes";
-// import fileRoutes from "./routes/routes.fileupload";
 
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const app = express();

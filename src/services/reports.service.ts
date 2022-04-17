@@ -8,20 +8,28 @@ import {
 } from "./tasks.service";
 import { days, daysArray } from "../db/models/constants";
 
-const getTasksStats = async (inputObj: any) => {
-	const { userId, taskStatus } = inputObj;
+const getTasksStats = async (inputObj: any | null) => {
+	console.info({ inputObj });
+	// const { userId, taskStatus } = inputObj;
+	let whereClause: any | null = {};
+
+	Object.entries(inputObj).forEach(([key, value]) => {
+		console.info({ key, value });
+		if (value) whereClause[key] = value;
+	});
+
+	console.info(whereClause);
+	if (inputObj === null) whereClause = null;
+
 	const { count, rows } = await Task.findAndCountAll({
-		where: {
-			userId,
-			taskStatus,
-		},
+		where: whereClause,
 		// offset: 10,
 		// limit: 2,
 	});
-	console.log(count);
-	console.log(rows);
+	// console.log({ count });
+	// console.log({ rows });
 
-	return count;
+	return { count, rows };
 };
 
 const getFormatTasksStats = async (inputObject: any) => {
@@ -37,31 +45,36 @@ const getFormatTasksStats = async (inputObject: any) => {
 
 	console.info({ tasks });
 
-	tasks.forEach((task: any) => {
-		const getCompletionDay = new Date(task?.dataValues?.updatedAt).getDay();
+	if (tasks.length > 0) {
+		tasks.forEach((task: any) => {
+			const getCompletionDay = new Date(task?.dataValues?.updatedAt).getDay();
 
-		const getDay = days[getCompletionDay];
+			const getDay = days[getCompletionDay];
 
-		tasksCompleted.push({
-			day: getDay,
-			taskName: task?.dataValues?.taskName,
-			completionTime: task?.dataValues?.updatedAt,
+			tasksCompleted.push({
+				day: getDay,
+				taskName: task?.dataValues?.taskName,
+				completionTime: task?.dataValues?.updatedAt,
+			});
 		});
-	});
 
-	let countoftasksperday: any = [];
-	daysArray.forEach((day) => {
-		let count = tasksCompleted.filter((task: any) => task.day === day).length;
-		console.info({ count, day });
+		let countoftasksperday: any = [];
+		daysArray.forEach((day) => {
+			let count = tasksCompleted.filter((task: any) => task.day === day).length;
+			console.info({ count, day });
+			const averageValue = count / tasks.length;
 
-		countoftasksperday.push({
-			day,
-			average: count > 0 ? (count / tasks.length).toFixed(3) : 0,
-			tasksCount: count,
+			countoftasksperday.push({
+				day,
+				average: count > 0 ? averageValue.toFixed(3) : 0,
+				tasksCount: count,
+			});
 		});
-	});
 
-	return countoftasksperday;
+		return countoftasksperday;
+	} else {
+		return [];
+	}
 };
 
 const getSimilarTasks = async (userId: number) => {

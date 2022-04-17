@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { getUserByEmail } from "../../services/userHelpers";
+import { getUserByEmail } from "../../services/user.service";
 
 export const verify = async (
 	req: Request,

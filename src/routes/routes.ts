@@ -1,12 +1,15 @@
 import { Router } from "express";
 
 // common functions
-import { somethingWentWrong } from "../services/common";
+import { somethingWentWrong } from "../services/common.service";
 
-import "./routes.cron";
-import userRoutes from "./api-routes/routes.user";
-import taskRoutes from "./api-routes/routes.task";
-import reportsRoutes from "./api-routes/routes.reports";
+import "./api-routes/cron.routes";
+import userRoutes from "./api-routes/user.routes";
+import taskRoutes from "./api-routes/task.routes";
+import reportsRoutes from "./api-routes/reports.routes";
+
+// cron route
+import "./api-routes/cron.routes";
 
 let router: any;
 

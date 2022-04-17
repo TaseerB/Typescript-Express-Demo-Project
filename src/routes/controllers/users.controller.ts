@@ -7,14 +7,14 @@ import {
 	createUser,
 	getUsersFromDb,
 	deleteUserById,
-} from "../../services/userHelpers";
+} from "../../services/user.service";
 
 // Models
 import User from "../../db/models/user";
 import { UserInterface } from "../../db/models/interfaces";
 
 // Common Functions
-import { sendMail } from "../../services/common";
+import { sendMail } from "../../services/common.service";
 
 export const getUsers = async (req: Request, res: Response) => {
 	const response = await getUsersFromDb();
@@ -158,3 +158,5 @@ export const verifyUser = async (req: Request, res: Response) => {
 		res.redirect("/login");
 	}
 };
+
+export const resetPassword = async (req: Request, res: Response) => {};
