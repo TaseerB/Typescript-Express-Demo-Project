@@ -2,7 +2,8 @@ import e, { Request, Response } from "express";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
-const password = process.env.PASSWORD || "test";
+const password = process?.env?.PASSWORD;
+const fromEmail = process?.env?.FROM_EMAIL;
 
 export const somethingWentWrong = (req: Request, res: Response) => {
 	res.status(500).json({ message: "something went Wrong." });
@@ -11,21 +12,21 @@ export const somethingWentWrong = (req: Request, res: Response) => {
 
 export const sendMail = async (inputObj: any) => {
 	console.info({ inputObj });
-	const { email, text, html } = inputObj;
+	const { email, text, html, subject } = inputObj;
 
 	let mailTransporter = nodemailer.createTransport({
 		service: "gmail",
 		auth: {
-			user: "taseer.baig@gmail.com",
+			user: fromEmail,
 			pass: password,
 		},
 	});
 
 	// Setting credentials
 	let mailDetails = {
-		from: "taseer.baig@gmail.com",
+		from: fromEmail,
 		to: email,
-		subject: "Here is a link to verify your account!",
+		subject: subject || "No Subject Found",
 		text,
 		html,
 		// html,

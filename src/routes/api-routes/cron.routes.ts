@@ -39,7 +39,7 @@ import { sendMail } from "../../services/common.service";
 
 // export = (cron: any) => {
 try {
-	cron.schedule("*30 * * * *", async () => {
+	cron.schedule("0 0 12 * * ?", async () => {
 		console.info("--- Email Cron for Pending Tasks ----");
 		const getStats: any = await getTasksStats({ taskStatus: "PENDING" });
 		// let task;
@@ -49,15 +49,22 @@ try {
 			// getStats.rows.forEach((ts: any, index: number) => {
 			console.info({ ch: ts?.dataValues });
 
-			let html = `
-			<p><b>Pending Tasks</b></p>
-		`;
-
 			const user: any = await getUserById(ts?.dataValues?.userId);
 			console.info({ cehck: user?.dataValues?.email });
 
 			const pt = ts?.dataValues?.taskName + " : " + ts?.dataValues?.taskDetail;
-			await sendMail({ email: user?.dataValues?.email, text: pt });
+
+			let html = ` 
+				<h1>Pending Tasks</h1>
+				<h2>${pt}</h2>
+			`;
+
+			await sendMail({
+				email: user?.dataValues?.email,
+				text: null,
+				html,
+				subject: "Pending Tasks!",
+			});
 
 			// });
 		}
