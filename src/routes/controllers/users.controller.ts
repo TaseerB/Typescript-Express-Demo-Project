@@ -50,10 +50,12 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 	const check = await sendMail({
 		email: userObj.email,
 		text,
+		html: null,
+		subject: "New Account Creation",
 	});
 	// let response: responseObject = check ? 200 : 400;
 
-	res.status(200).json({ user });
+	res.status(200).json({ user, check });
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
@@ -184,7 +186,12 @@ export const resetPassword = async (req: Request, res: Response) => {
 			
 		`;
 
-		const check = await sendMail({ email, html });
+		const check = await sendMail({
+			email,
+			html,
+			text: null,
+			subject: "Password Reset Link",
+		});
 
 		console.info({ check });
 

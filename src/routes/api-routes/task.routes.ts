@@ -11,7 +11,7 @@ import {
 // Middlewares
 import { taskByIdInput } from "../middlewares/taskByIdInput";
 import { verify } from "../middlewares/verify";
-import upload from "../middlewares/multerSetup";
+import upload from "../../services/multer.service";
 
 export = (router: any) => {
 	console.info("---- Task routes ----");
