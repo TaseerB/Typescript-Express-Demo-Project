@@ -16,6 +16,10 @@ import {
 
 // MiddleWares
 import { verify } from "../middlewares/verify";
+import {
+	validateLogin,
+	validateSignUp,
+} from "../middlewares/schema/user.validator";
 import "../../db/config/passport";
 
 export = (router: any) => {
@@ -24,11 +28,11 @@ export = (router: any) => {
 
 		router
 			.get("/users", getUsers)
-			.post("/users", createOrFindUser)
+			.post("/users", validateSignUp, createOrFindUser)
 			.delete("/users", verify, deleteUser);
 
 		// Auth Routes
-		router.post("/login", loginUser);
+		router.post("/login", validateLogin, loginUser);
 		router.get("/verify/:email/:userId", verifyUser);
 
 		// Google Based Auth Routes

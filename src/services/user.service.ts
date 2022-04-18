@@ -8,7 +8,8 @@ const checkRole = (role: String) => role === "admin" || role === "user";
  * Main Helper Functions to be used in routes
  */
 
-const getUsersFromDb = async () => User.findAll();
+const getUsersFromDb = async () =>
+	User.findAll({ attributes: { exclude: ["password"] } });
 
 const getUserById = async (userId: number) => User.findByPk(userId);
 
