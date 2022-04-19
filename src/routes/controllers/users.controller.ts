@@ -55,7 +55,7 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 	});
 	// let response: responseObject = check ? 200 : 400;
 
-	res.status(200).json({ user, check });
+	res.status(200).json({ userId: user?.user?.userId, check });
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
