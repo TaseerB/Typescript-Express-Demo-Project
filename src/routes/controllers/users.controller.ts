@@ -17,16 +17,16 @@ import User from "../../db/models/user";
 import { UserInterface } from "../../db/models/interfaces";
 
 // Common Functions
-import { sendMail } from "../../services/common.service";
+import { sendMail, encodeIds, decodeIds } from "../../services/common.service";
 
 export const getUsers = async (req: Request, res: Response) => {
 	const response = await getUsersFromDb();
-	res.json(response);
+	encodeIds(response);
+	res.status(200).json({ response });
 };
 
 export const createOrFindUser = async (req: Request, res: Response) => {
-	const userObj = req.body;
-	const { host } = req.headers;
+	const userObj = req?.body;
 	console.info({ userObj });
 
 	const user: any = await createUser(userObj);
@@ -37,12 +37,12 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 
 	const text =
 		"Hello " +
-		userObj.name +
+		userObj?.name +
 		",\n\n" +
 		"Please verify your account by clicking the link: \nhttp://" +
-		req.headers.host +
+		req?.headers?.host +
 		"/verify/" +
-		userObj.email +
+		userObj?.email +
 		"/" +
 		user?.user?.userId +
 		"\n\nThank You!\n";

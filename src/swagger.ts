@@ -129,15 +129,15 @@ export default {
 		"/tasks/{id}": {
 			get: {
 				tags: ["TasksByID"],
-				description: "Returns tasks based on ID",
-				summary: "Find tasks by ID",
+				description: "Returns tasks based on Encoded ID",
+				summary: "Find tasks by Encoded ID",
 				operationId: "gettasksById",
 				produces: ["application/json"],
 				parameters: [
 					{
 						name: "id",
 						in: "path",
-						description: "ID of pet to use",
+						description: "ID of task to use",
 						required: true,
 						type: "integer",
 					},
@@ -156,7 +156,7 @@ export default {
 			},
 			put: {
 				tags: ["TasksByID"],
-				description: "Updates task based on ID",
+				description: "Updates task based on Encoded ID",
 				summary: "Updates any task value provided in input",
 				operationId: "puttasksById",
 				produces: ["application/json"],
@@ -164,7 +164,7 @@ export default {
 					{
 						name: "id",
 						in: "path",
-						description: "ID of pet to use",
+						description: "ID of task to use",
 						required: true,
 						type: "integer",
 					},
@@ -185,7 +185,7 @@ export default {
 			},
 			delete: {
 				tags: ["TasksByID"],
-				description: "Deletes task based on ID",
+				description: "Deletes task based on Encoded ID",
 				summary: "Deletes tasks by ID",
 				operationId: "deletetasksById",
 				produces: ["application/json"],
@@ -193,7 +193,7 @@ export default {
 					{
 						name: "id",
 						in: "path",
-						description: "ID of pet to use",
+						description: "ID of task to use",
 						required: true,
 						type: "integer",
 					},

@@ -1,9 +1,12 @@
 import e, { Request, Response } from "express";
 import nodemailer from "nodemailer";
+import Hashids from "hashids";
 import dotenv from "dotenv";
+
 dotenv.config();
 const password = process?.env?.PASSWORD;
 const fromEmail = process?.env?.FROM_EMAIL;
+const secretSalt = process?.env?.SECRETENCODETEXT;
 
 export const somethingWentWrong = (req: Request, res: Response) => {
 	res.status(500).json({ message: "something went Wrong." });
@@ -46,4 +49,58 @@ export const sendMail = async (inputObj: any) => {
 	// });
 
 	return true;
+};
+
+export const encodeIds = (inpObj: any) => {
+	// console.info({ secretSalt });
+	const hashids = new Hashids(secretSalt);
+
+	if (inpObj.length > 0) {
+		let objKeys = inpObj[0];
+		objKeys = Object.keys(objKeys?.dataValues);
+
+		let idKey: any = objKeys.filter((objKey: string) => {
+			return objKey.includes("Id");
+		});
+		console.info({ key: idKey[0] });
+		const getIdkey = idKey[0];
+
+		inpObj.forEach((obj: any) => {
+			const getValue = obj?.dataValues[getIdkey];
+			console.info({ check: typeof getValue, getValue });
+			const encodedValue = hashids.encode(getValue);
+			console.info({ encodedValue });
+			obj.dataValues[getIdkey] = encodedValue;
+		});
+	}
+};
+
+export const decodeIds = (id: any) => {
+	console.info({ id });
+	const hashids = new Hashids(secretSalt);
+
+	const getDecodedId = hashids.decode(id);
+
+	console.info({ getDecodedId });
+
+	return Number(getDecodedId[0]);
+
+	// if (inpObj.length > 0) {
+	// 	let objKeys = inpObj[0];
+	// 	objKeys = Object.keys(objKeys?.dataValues);
+
+	// 	let idKey: any = objKeys.filter((objKey: string) => {
+	// 		return objKey.includes("Id");
+	// 	});
+	// 	console.info({ key: idKey[0] });
+	// 	const getIdkey = idKey[0];
+
+	// 	inpObj.forEach((obj: any) => {
+	// 		const getValue = obj?.dataValues[getIdkey];
+	// 		console.info({ getValue });
+	// 		const decodedValue = hashids.decode(getValue);
+	// 		console.info({ decodedValue });
+	// 		obj.dataValues[getIdkey] = decodedValue;
+	// 	});
+	// }
 };

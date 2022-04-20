@@ -8,6 +8,8 @@ import {
 	deleteTaskFromDb,
 } from "../../services/tasks.service";
 
+import { encodeIds } from "../../services/common.service";
+
 export const getTasks = async (req: Request, res: Response) => {
 	console.info("tasks");
 	const { userId } = res.locals;
@@ -16,6 +18,9 @@ export const getTasks = async (req: Request, res: Response) => {
 		console.info({ userId });
 
 		const tasks = await getTasksFromDb(userId);
+
+		// Encoding tasks
+		encodeIds(tasks);
 
 		console.info({ tasks });
 

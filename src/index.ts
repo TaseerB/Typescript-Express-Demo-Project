@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 // import cookieSession from "cookie-session";
 // import passport from "passport";
 import swaggerUi from "swagger-ui-express";
+import helmet from "helmet";
+
 import swaggerDocument from "./swagger";
 
 // Routes
@@ -34,7 +36,8 @@ const port = process.env.PORT;
 
 // Calling Routes
 app.use(routes);
-// app.use(fileRoutes);
+
+app.use(helmet());
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello World!");

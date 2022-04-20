@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { taskByIdInterface } from "../../db/models/interfaces";
 import { customRequest } from "../../db/models/requestModel";
 
+import { decodeIds } from "../../services/common.service";
+
 export const taskByIdInput = (
 	req: customRequest,
 	res: Response,
@@ -9,10 +11,12 @@ export const taskByIdInput = (
 ) => {
 	const { userId } = res.locals;
 	const { taskId } = req.params;
-	const taskIDInt = parseInt(taskId, 10);
+
+	const taskDecodedId = decodeIds(taskId);
+
 	let taskByIdInput: taskByIdInterface = {
 		userId,
-		taskId: taskIDInt,
+		taskId: taskDecodedId,
 	};
 
 	console.info({ taskByIdInput });
