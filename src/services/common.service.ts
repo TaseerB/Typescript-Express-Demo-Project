@@ -52,13 +52,15 @@ export const sendMail = async (inputObj: any) => {
 };
 
 export const encodeIds = (inpObj: any) => {
-	// console.info({ secretSalt });
-	const hashids = new Hashids(secretSalt);
+	console.info({ objectToEncode: inpObj });
+
+	const hashids = new Hashids(secretSalt, 5);
 
 	if (inpObj.length > 0) {
 		let objKeys = inpObj[0];
 		objKeys = Object.keys(objKeys?.dataValues);
 
+		// getting name of key from object
 		let idKey: any = objKeys.filter((objKey: string) => {
 			return objKey.includes("Id");
 		});
@@ -72,35 +74,32 @@ export const encodeIds = (inpObj: any) => {
 			console.info({ encodedValue });
 			obj.dataValues[getIdkey] = encodedValue;
 		});
+	} else {
+		let objKeys = inpObj;
+		objKeys = Object.keys(objKeys?.dataValues);
+
+		// getting name of key from object
+		let idKey: any = objKeys.filter((objKey: string) => {
+			return objKey.includes("Id");
+		});
+		console.info({ key: idKey[0] });
+		const getIdkey = idKey[0];
+
+		const getValue = inpObj?.dataValues[getIdkey];
+		console.info({ check: typeof getValue, getValue });
+		const encodedValue = hashids.encode(getValue);
+		console.info({ encodedValue });
+		inpObj.dataValues[getIdkey] = encodedValue;
 	}
 };
 
 export const decodeIds = (id: any) => {
-	console.info({ id });
-	const hashids = new Hashids(secretSalt);
+	console.info({ idToDecode: id });
+	const hashids = new Hashids(secretSalt, 5);
 
 	const getDecodedId = hashids.decode(id);
 
 	console.info({ getDecodedId });
 
 	return Number(getDecodedId[0]);
-
-	// if (inpObj.length > 0) {
-	// 	let objKeys = inpObj[0];
-	// 	objKeys = Object.keys(objKeys?.dataValues);
-
-	// 	let idKey: any = objKeys.filter((objKey: string) => {
-	// 		return objKey.includes("Id");
-	// 	});
-	// 	console.info({ key: idKey[0] });
-	// 	const getIdkey = idKey[0];
-
-	// 	inpObj.forEach((obj: any) => {
-	// 		const getValue = obj?.dataValues[getIdkey];
-	// 		console.info({ getValue });
-	// 		const decodedValue = hashids.decode(getValue);
-	// 		console.info({ decodedValue });
-	// 		obj.dataValues[getIdkey] = decodedValue;
-	// 	});
-	// }
 };
