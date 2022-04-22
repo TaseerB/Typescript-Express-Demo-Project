@@ -68,11 +68,17 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
 	const userObj = req.body;
-	console.info({ userObj });
-	const userId = decodeIds(userObj?.userId);
-	const deletedUser = await deleteUserById({ userId });
+	const checkUser = res?.locals?.role;
 
-	res.status(200).json({ message: deletedUser });
+	if (checkUser === "admin") {
+		console.info({ userObj });
+		const userId = decodeIds(userObj?.userId);
+		const deletedUser = await deleteUserById({ userId });
+
+		res.status(200).json({ message: deletedUser });
+	} else {
+		res.status(403).json({ message: "Forbidden: Not enough privilege" });
+	}
 };
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -88,7 +94,12 @@ export const loginUser = async (req: Request, res: Response) => {
 		);
 		if (validPassword) {
 			const token: String = jwt.sign(
-				{ userId: user.userId, email: user.email, firstName: user.firstName },
+				{
+					userId: user.userId,
+					email: user.email,
+					firstName: user.firstName,
+					role: user.role,
+				},
 				secret,
 				{ expiresIn: "1h" }
 			);
@@ -132,6 +143,7 @@ export const googleAuthUser = async (req: Request, res: Response) => {
 			userId,
 			email: userObj.email,
 			firstName: userObj.firstName,
+			role: userObj.role,
 		},
 		secret
 	);
@@ -211,7 +223,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 		return;
 	}
 
-	res.status(400).json({ message: "user Not Fuund" });
+	res.status(404).json({ message: "user Not Fuund" });
 	return;
 };
 

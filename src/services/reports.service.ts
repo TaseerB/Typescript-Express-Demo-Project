@@ -7,6 +7,7 @@ import {
 	getTasksFromDb,
 } from "./tasks.service";
 import { days, daysArray } from "../db/models/constants";
+import { encodeIds } from "./common.service";
 
 const getTasksStats = async (inputObj: any | null) => {
 	console.info({ inputObj });
@@ -94,9 +95,11 @@ const getSimilarTasks = async (userId: number) => {
 	});
 
 	let similarTasks: any[] = [];
+	let simTask: any[] = [];
 	let arr_size = tasks.length;
 
 	for (let i = 0; i < arr_size / 2; i++) {
+		simTask = [];
 		let count = 0;
 		const itask = tasks[i];
 		const isimilarityValueCheck = itask?.taskName + " " + itask?.taskDetail;
@@ -107,13 +110,17 @@ const getSimilarTasks = async (userId: number) => {
 
 			if (isimilarityValueCheck === jsimilarityValueCheck) {
 				if (count === 0) {
-					similarTasks.push(jtask);
-					similarTasks.push(jtask);
+					simTask.push(itask);
+					simTask.push(jtask);
 				} else {
-					similarTasks.push(jtask);
+					simTask.push(jtask);
 				}
 				count++;
 			}
+		}
+		if (simTask.length > 0) {
+			encodeIds(simTask);
+			similarTasks.push(simTask);
 		}
 	}
 

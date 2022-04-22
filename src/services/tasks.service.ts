@@ -16,7 +16,7 @@ import { Op, col } from "sequelize";
 
 // Tasks Helper Functioms
 const getTasksFromDb = async (userId: number) =>
-	Task.findAll({ where: { userId } });
+	Task.findAll({ attributes: { exclude: ["userId"] }, where: { userId } });
 
 const createTaskInDb = async (taskObj: TaskInterface): Promise<object> => {
 	console.info({ "creatingTask--->": taskObj });
