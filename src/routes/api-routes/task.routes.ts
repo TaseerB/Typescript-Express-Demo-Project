@@ -13,15 +13,21 @@ import { taskByIdInput } from "../middlewares/taskByIdInput";
 import { verify } from "../middlewares/verify";
 import upload from "../../services/multer.service";
 
+// validators
+import { validateTaskCreation } from "../middlewares/schema/task.vaildator";
+
 export = (router: any) => {
 	console.info("---- Task routes ----");
 
 	// Middleware Function Stack
 	const taskMiddlewareFunctions = [verify, taskByIdInput];
+	const editMiddlewareFunction = [validateTaskCreation, verify, taskByIdInput];
 
 	// Tasks Routes
 	console.info("---- Tasks routes ----");
-	router.get("/tasks", verify, getTasks).post("/tasks", verify, createTask);
+	router
+		.get("/tasks", verify, getTasks)
+		.post("/tasks", validateTaskCreation, verify, createTask);
 
 	// upload Attachement for Task
 	router.post(
@@ -34,6 +40,6 @@ export = (router: any) => {
 	// Task by Id routes
 	router
 		.get("/tasks/:taskId", taskMiddlewareFunctions, getTaskById)
-		.put("/tasks/:taskId", taskMiddlewareFunctions, editTaskById)
+		.put("/tasks/:taskId", editMiddlewareFunction, editTaskById)
 		.delete("/tasks/:taskId", taskMiddlewareFunctions, deleteTaskById);
 };

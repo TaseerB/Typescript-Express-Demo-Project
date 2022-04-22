@@ -56,3 +56,25 @@ export const validateSignUp = async (
 		res.json({ err });
 	}
 };
+
+export const valdiateResetPassword = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const resetPasswordSchema = Joi.object({
+			email: Joi.string().email().lowercase().required(),
+		});
+
+		console.info({ path: req?.url });
+
+		await resetPasswordSchema.validateAsync(req.body);
+
+		console.info("--- Scehema Verified----");
+
+		next();
+	} catch (err) {
+		res.json({ err });
+	}
+};

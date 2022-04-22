@@ -19,6 +19,7 @@ import { verify } from "../middlewares/verify";
 import {
 	validateLogin,
 	validateSignUp,
+	valdiateResetPassword,
 } from "../middlewares/schema/user.validator";
 import "../../db/config/passport";
 
@@ -51,7 +52,7 @@ export = (router: any) => {
 		);
 
 		// Password reset flow
-		router.post("/password-reset", resetPassword);
+		router.post("/password-reset", valdiateResetPassword, resetPassword);
 		router.post("/password-update/:userId/:email", updatePassword);
 		// router.post("/update-password", verify);
 	} catch (e) {

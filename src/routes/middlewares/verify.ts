@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { getUserByEmail } from "../../services/user.service";
-
-const checkRole = (role: String) => role === "admin" || role === "user";
+// import { getUserByEmail } from "../../services/user.service";
 
 export const verify = async (
 	req: Request,
@@ -10,27 +8,17 @@ export const verify = async (
 	next: NextFunction
 ) => {
 	try {
-		const userFromGoogle: any = res?.req;
-		const userEmailFromGoole: any = userFromGoogle?.user?._json?.email;
 		const { authorization } = req.headers;
 		const tokenFromHeaders: any = authorization || null;
 
-		// if (userEmailFromGoole) {
-		// 	const getUserId: any = await getUserByEmail(userEmailFromGoole);
-		// 	res.locals.userId = getUserId?.dataValues?.userId;
-		// 	next();
-		// }
-		// if {
 		if (tokenFromHeaders) {
-			// If user registered from his own personal email`
-
 			let token: string = tokenFromHeaders.split(" ")[1];
 			let decoded: any = jwt.verify(token, process.env.SECRET || "test");
 
 			console.info({ decoded });
-			// const user = await User.findOne({ where: { email: decoded?.email } });
 
 			res.locals.userId = decoded?.userId;
+			res.locals.role = decoded?.role;
 			next();
 		} else {
 			res

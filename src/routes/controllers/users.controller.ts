@@ -17,57 +17,72 @@ import User from "../../db/models/user";
 import { UserInterface } from "../../db/models/interfaces";
 
 // Common Functions
-import { sendMail } from "../../services/common.service";
+import { sendMail, encodeIds, decodeIds } from "../../services/common.service";
 
 export const getUsers = async (req: Request, res: Response) => {
 	const response = await getUsersFromDb();
-	res.json(response);
+	encodeIds(response);
+	res.status(200).json({ response });
 };
 
 export const createOrFindUser = async (req: Request, res: Response) => {
-	const userObj = req.body;
-	const { host } = req.headers;
-	console.info({ userObj });
+	try {
+		const userObj = req?.body;
+		console.info({ userObj });
 
-	const user: any = await createUser(userObj);
-	// Send email to the user to check if the email is valid or not
+		let user: any = await createUser(userObj);
+		user = user?.user;
+		// Send email to the user to check if the email is valid or not
 
-	// var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
-	// token.save(function (err) {
+		// var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+		// token.save(function (err) {
 
-	const text =
-		"Hello " +
-		userObj.name +
-		",\n\n" +
-		"Please verify your account by clicking the link: \nhttp://" +
-		req.headers.host +
-		"/verify/" +
-		userObj.email +
-		"/" +
-		user?.user?.userId +
-		"\n\nThank You!\n";
+		const text =
+			"Hello " +
+			userObj?.name +
+			",\n\n" +
+			"Please verify your account by clicking the link: \nhttp://" +
+			req?.headers?.host +
+			"/verify/" +
+			userObj?.email +
+			"/" +
+			user?.userId +
+			"\n\nThank You!\n";
 
-	const check = await sendMail({
-		email: userObj.email,
-		text,
-		html: null,
-		subject: "New Account Creation",
-	});
-	// let response: responseObject = check ? 200 : 400;
+		const check = await sendMail({
+			email: userObj.email,
+			text,
+			html: null,
+			subject: "New Account Creation",
+		});
+		// let response: responseObject = check ? 200 : 400;
 
-	res.status(200).json({ user, check });
+		encodeIds(user);
+
+		res.status(200).json({ user, check });
+	} catch (e) {
+		console.error({ e });
+		res.status(400).json({ " Something went wrong --->": e });
+	}
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
 	const userObj = req.body;
-	console.info({ userObj });
-	const deletedUser = await deleteUserById(userObj);
+	const checkUser = res?.locals?.role;
 
-	res.status(200).json({ message: deletedUser });
+	if (checkUser === "admin") {
+		console.info({ userObj });
+		const userId = decodeIds(userObj?.userId);
+		const deletedUser = await deleteUserById({ userId });
+
+		res.status(200).json({ message: deletedUser });
+	} else {
+		res.status(403).json({ message: "Forbidden: Not enough privilege" });
+	}
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-	const secret: Secret = process.env.SECRET || "test";
+	const secret: Secret = process?.env?.SECRET || "test";
 	const { password, email } = req.body;
 
 	const user = await getUserByEmail(email);
@@ -79,8 +94,14 @@ export const loginUser = async (req: Request, res: Response) => {
 		);
 		if (validPassword) {
 			const token: String = jwt.sign(
-				{ userId: user.userId, email: user.email, firstName: user.firstName },
-				secret
+				{
+					userId: user.userId,
+					email: user.email,
+					firstName: user.firstName,
+					role: user.role,
+				},
+				secret,
+				{ expiresIn: "1h" }
 			);
 			res.status(200).json({ token });
 		} else {
@@ -122,6 +143,7 @@ export const googleAuthUser = async (req: Request, res: Response) => {
 			userId,
 			email: userObj.email,
 			firstName: userObj.firstName,
+			role: userObj.role,
 		},
 		secret
 	);
@@ -201,7 +223,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 		return;
 	}
 
-	res.status(400).json({ message: "user Not Fuund" });
+	res.status(404).json({ message: "user Not Fuund" });
 	return;
 };
 
