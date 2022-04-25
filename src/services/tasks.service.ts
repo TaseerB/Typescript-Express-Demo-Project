@@ -40,7 +40,10 @@ const getSepecificTaskFromDb = async (inputObj: taskByIdInterface) => {
 
 	const { userId, taskId } = inputObj;
 
-	return Task.findOne({ where: { userId, taskId } });
+	return Task.findOne({
+		attributes: { exclude: ["userId"] },
+		where: { userId, taskId },
+	});
 };
 
 const updateTaskInDb = async (

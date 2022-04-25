@@ -54,6 +54,7 @@ export const getTaskById = async (req: customRequest, res: Response) => {
 	const task = await getSepecificTaskFromDb(taskByIdInput);
 
 	if (task) {
+		encodeIds(task);
 		res.status(200).json({ message: { task } });
 		return;
 	}
