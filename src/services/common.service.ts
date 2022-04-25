@@ -39,16 +39,6 @@ export const sendMail = async (inputObj: any) => {
 	// Sending Email
 	console.info("--- sending email ---");
 	return mailTransporter.sendMail(mailDetails);
-	// console.info({ "--- email sent ----": test });
-	// , (err, data) => {
-	// if (err) {
-	// console.log("Error Occurs", err);
-	// } else {
-	// console.log("Email sent successfully");
-	// }
-	// });
-
-	return true;
 };
 
 export const encodeIds = (inpObj: any) => {

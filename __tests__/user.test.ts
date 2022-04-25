@@ -1,48 +1,50 @@
 import request from "supertest";
 import { createServer } from "../src/utils/server";
-import Hashids from "hashids";
-// import * as userServices from "../src/services/user.service";
-
-const secretSalt = process?.env?.SECRETENCODETEXT;
-
-import { encodeIds, decodeIds } from "../src/services/common.service";
+import * as userServices from "../src/routes/controllers/users.controller";
+import { responseObj } from "../utils/test.utils";
 
 let app = createServer();
 
-describe("check encoded ids", () => {
-	it("check encoded decoded ids", () => {
-		const hashids = new Hashids(secretSalt, 5);
-		const obj = { dataValues: { testId: 10 } };
-		const encodedId = hashids.encode(10);
-		const decodedId = hashids.decode(encodedId);
+describe("Users", () => {
+	describe("GET /users", () => {
+		test("users get should return array of users", async () => {
+			let check = jest
+				.spyOn(userServices, "getUsers")
+				//@ts-ignore
+				.mockReturnValue(responseObj);
+			// chec;
+			const users = await request(app)
+				.get("/users")
+				.set("Accept", "application/json");
 
-		console.info({ encodedId, did: decodedId[0] });
+			const usersResponse = JSON.parse(users.text);
 
-		encodeIds(obj);
+			// console.info({ c1: typeof usersResponse, c2: typeof responseObj });
 
-		expect(obj.dataValues.testId).toEqual(encodedId);
+			console.info({ usersResponse });
 
-		const getdecid = decodeIds(obj.dataValues.testId);
-
-		expect(getdecid).toEqual(decodedId[0]);
+			expect(usersResponse.response[0]).toEqual(responseObj);
+		});
 	});
-});
 
-// describe("GET /users", () => {
-// 	describe("get users", () => {
-// 		it("get list of users", async () => {
-// 			// const spy = jest
-// 			// 	.spyOn(userServices, "getUsersFromDb")
-// 			// 	.mockResolvedValueOnce([]);
-// 			// console.info({ spy });
-// 			const users = await request(app)
-// 				.get("/users")
-// 				.set("Accept", "application/json");
-// 			expect(users).toEqual([]);
-// 			expect(users.status).toEqual(200);
-// 			// spy.mockRestore();
-// 			// expect(spy).toHaveBeenCalledTimes(1);
-// 			// return;
-// 		});
-// 	});
-// });
+	// describe("GET /users/", () => {
+	// 	test("users get should return array of users", async () => {
+	// 		let check = jest
+	// 			.spyOn(userServices, "getUsers")
+	// 			//@ts-ignore
+	// 			.mockReturnValue(responseObj);
+	// 		// chec;
+	// 		const users = await request(app)
+	// 			.get("/users")
+	// 			.set("Accept", "application/json");
+
+	// 		const usersResponse = JSON.parse(users.text);
+
+	// 		// console.info({ c1: typeof usersResponse, c2: typeof responseObj });
+
+	// 		console.info({ usersResponse });
+
+	// 		expect(usersResponse.response[0]).toEqual(responseObj);
+	// 	});
+	// });
+});
