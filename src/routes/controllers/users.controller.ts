@@ -39,7 +39,7 @@ export const createOrFindUser = async (req: Request, res: Response) => {
 
 		const text =
 			"Hello " +
-			userObj?.name +
+			userObj?.firstName +
 			",\n\n" +
 			"Please verify your account by clicking the link: \nhttp://" +
 			req?.headers?.host +

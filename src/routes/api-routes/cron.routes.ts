@@ -38,41 +38,41 @@ import { sendMail } from "../../services/common.service";
 // }
 
 // export = (cron: any) => {
-try {
-	cron.schedule("0 0 12 * * ?", async () => {
-		console.info("--- Email Cron for Pending Tasks ----");
-		const getStats: any = await getTasksStats({ taskStatus: "PENDING" });
-		// let task;
-		console.info({ chek: getStats.rows });
+// try {
+// 	cron.schedule("0 0 12 * * ?", async () => {
+// 		console.info("--- Email Cron for Pending Tasks ----");
+// 		const getStats: any = await getTasksStats({ taskStatus: "PENDING" });
+// 		// let task;
+// 		console.info({ chek: getStats.rows });
 
-		for (const ts of getStats.rows) {
-			// getStats.rows.forEach((ts: any, index: number) => {
-			console.info({ ch: ts?.dataValues });
+// 		for (const ts of getStats.rows) {
+// 			// getStats.rows.forEach((ts: any, index: number) => {
+// 			console.info({ ch: ts?.dataValues });
 
-			const user: any = await getUserById(ts?.dataValues?.userId);
-			console.info({ cehck: user?.dataValues?.email });
+// 			const user: any = await getUserById(ts?.dataValues?.userId);
+// 			console.info({ cehck: user?.dataValues?.email });
 
-			const pt = ts?.dataValues?.taskName + " : " + ts?.dataValues?.taskDetail;
+// 			const pt = ts?.dataValues?.taskName + " : " + ts?.dataValues?.taskDetail;
 
-			let html = ` 
-				<h1>Pending Tasks</h1>
-				<h2>${pt}</h2>
-			`;
+// 			let html = `
+// 				<h1>Pending Tasks</h1>
+// 				<h2>${pt}</h2>
+// 			`;
 
-			await sendMail({
-				email: user?.dataValues?.email,
-				text: null,
-				html,
-				subject: "Pending Tasks!",
-			});
+// 			await sendMail({
+// 				email: user?.dataValues?.email,
+// 				text: null,
+// 				html,
+// 				subject: "Pending Tasks!",
+// 			});
 
-			// });
-		}
+// 			// });
+// 		}
 
-		// tasks.forEach(())
-	});
-} catch (e) {
-	console.error({ e });
-}
+// 		// tasks.forEach(())
+// 	});
+// } catch (e) {
+// 	console.error({ e });
+// }
 
 // const getUserPendingTasks = () => {};
