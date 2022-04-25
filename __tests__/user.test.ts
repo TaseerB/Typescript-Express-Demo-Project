@@ -28,21 +28,21 @@ describe("check encoded ids", () => {
 	});
 });
 
-describe("GET /users", () => {
-	describe("get users", () => {
-		it("get list of users", async () => {
-			// const spy = jest
-			// 	.spyOn(userServices, "getUsersFromDb")
-			// 	.mockResolvedValueOnce([]);
-			// console.info({ spy });
-			const users = await request(app)
-				.get("/users")
-				.set("Accept", "application/json");
-			// expect(users).toEqual([]);
-			expect(users.status).toEqual(200);
-			// spy.mockRestore();
-			// expect(spy).toHaveBeenCalledTimes(1);
-			// return;
-		});
-	});
-});
+// describe("GET /users", () => {
+// 	describe("get users", () => {
+// 		it("get list of users", async () => {
+// 			// const spy = jest
+// 			// 	.spyOn(userServices, "getUsersFromDb")
+// 			// 	.mockResolvedValueOnce([]);
+// 			// console.info({ spy });
+// 			const users = await request(app)
+// 				.get("/users")
+// 				.set("Accept", "application/json");
+// 			expect(users).toEqual([]);
+// 			expect(users.status).toEqual(200);
+// 			// spy.mockRestore();
+// 			// expect(spy).toHaveBeenCalledTimes(1);
+// 			// return;
+// 		});
+// 	});
+// });
