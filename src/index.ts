@@ -1,30 +1,22 @@
 // Libraries
-import express, { Request, Response } from "express";
-import bodyParser from "body-parser";
+import { Request, Response } from "express";
 import swaggerUi from "swagger-ui-express";
 import helmet from "helmet";
 
+import { createServer } from "./utils/server";
 import swaggerDocument from "./swagger";
 
 // Routes
-import routes from "./routes/routes";
 
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const app = express();
-export default app;
-
-// Parsing Body Params
-app.use(bodyParser.json());
+let app = createServer();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const port = process.env.PORT;
 // const cookieKey: any = process?.env?.COOKIEKEY || "someSomeSome";
-
-// Calling Routes
-app.use(routes);
 
 app.use(helmet());
 
