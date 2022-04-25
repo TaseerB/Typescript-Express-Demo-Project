@@ -24,11 +24,7 @@ const getTasksStats = async (inputObj: any | null) => {
 
 	const { count, rows } = await Task.findAndCountAll({
 		where: whereClause,
-		// offset: 10,
-		// limit: 2,
 	});
-	// console.log({ count });
-	// console.log({ rows });
 
 	return { count, rows };
 };
@@ -81,18 +77,18 @@ const getFormatTasksStats = async (inputObject: any) => {
 const getSimilarTasks = async (userId: number) => {
 	const tasks: any = await getTasksFromDb(userId);
 
-	const taskDetailsArray = tasks.map(
-		(task: any) => task?.taskName + " " + task?.taskDetail
-	);
+	// const taskDetailsArray = tasks.map(
+	// 	(task: any) => task?.taskName + " " + task?.taskDetail
+	// );
 	// // .map((task) => task.taskName);
-	const similartTasks = tasks.filter((value: any, index: any) => {
-		const check = taskDetailsArray.indexOf(value);
-		// console.info({ value, index, check });
+	// const similartTasks = tasks.filter((value: any, index: any) => {
+	// 	const check = taskDetailsArray.indexOf(value);
+	// 	// console.info({ value, index, check });
 
-		const similarityValueCheck = value?.taskName + " " + value?.taskDetail;
+	// 	const similarityValueCheck = value?.taskName + " " + value?.taskDetail;
 
-		return taskDetailsArray.indexOf(similarityValueCheck) != index;
-	});
+	// 	return taskDetailsArray.indexOf(similarityValueCheck) != index;
+	// });
 
 	let similarTasks: any[] = [];
 	let simTask: any[] = [];
@@ -124,20 +120,9 @@ const getSimilarTasks = async (userId: number) => {
 		}
 	}
 
-	// tasks.forEach((task: any, index: any) => {
-	// 	const similarityValueCheck = task?.taskName + " " + task?.taskDetail;
-	// 	if (taskDetailsArray.indexOf(similarityValueCheck) != index) {
-	// 		similarTasks.push(task);
-	// 	}
-	// });
-
 	console.info({ similarTasks });
 
 	return similarTasks;
-
-	// tasks.forEach((task) => {
-	// 	console.info({ words: task?.taskDetail });
-	// });
 };
 
 // const getPerDayTasksStats;
